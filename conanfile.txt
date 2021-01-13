@@ -1,0 +1,9 @@
+[requires]
+boost/1.69.0@conan/stable
+zlib/1.2.11@conan/stable
+bzip2/1.0.6@conan/stable
+
+[options]
+
+[generators]
+cmake
