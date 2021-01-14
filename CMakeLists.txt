@@ -10,6 +10,8 @@ find_package(Threads)
 
 # -------------------------------- SERVER SOURCES -------------------------------- #
 set(SRCS_SERVER ${SRCS_SERVER_DIR}/main.cpp
+                ${SRCS_SERVER_DIR}/jsonReader.cpp
+                ${SRCS_SERVER_DIR}/Error.cpp
 )
 
 add_executable(zia ${SRCS_SERVER})

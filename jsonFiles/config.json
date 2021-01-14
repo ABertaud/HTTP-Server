@@ -1,0 +1,9 @@
+{
+    "zia": {
+        "modules": [
+            "PHP CGI",
+            "SSL/TSL",
+            "Snake",
+            "File Server"
+        ]
+    }
