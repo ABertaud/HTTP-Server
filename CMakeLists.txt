@@ -24,8 +24,8 @@ target_include_directories(zia PRIVATE SYSTEM ${INCLUDES_SERVER_DIR})
 target_link_libraries(zia ${CONAN_LIBS})
 target_link_libraries(zia ${CMAKE_THREAD_LIBS_INIT})
 
-#if (UNIX)
-#    include(CTest)
-#    enable_testing(MAKE_DIRECTORY tests)#
-#    add_subdirectory(tests)
-#endif (UNIX)
+if (UNIX)
+    include(CTest)
+    enable_testing(MAKE_DIRECTORY tests)#
+    add_subdirectory(tests)
+endif (UNIX)

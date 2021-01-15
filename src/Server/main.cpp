@@ -11,14 +11,19 @@
 #include <sstream>
 #include <filesystem>
 #include "jsonReader.hpp"
+#include "Error.hpp"
 
 int main(void)
 {
-    std::string filename = "./jsonFiles/config.json";
+    std::string filename = "../jsonFiles/config.json";
     try {
         jsonReader reader(filename);
-    } catch (std::exception const &err) {
+        std::cout << reader.getJsonFile();
+    } catch (Error const &err) {
         std::cout << err.what();
+        return (84);
+    } catch (nlohmann::json::exception const &jsonErr) {
+        std::cout << jsonErr.what();
         return (84);
     }
     return (0);

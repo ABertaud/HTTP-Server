@@ -7,6 +7,7 @@
 
 #include "jsonReader.hpp"
 #include "Error.hpp"
+#include <iostream>
 
 jsonReader::jsonReader(const std::string& configPath)
 try : _configPath(configPath)

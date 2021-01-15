@@ -1,16 +1,18 @@
 set(INCLUDES_SERVER_DIR ${PROJECT_SOURCE_DIR}/include/Server)
 set(SRCS_SERVER_DIR ${PROJECT_SOURCE_DIR}/src/Server)
+set(TESTS_SERVER_DIR ${PROJECT_SOURCE_DIR}/tests)
 
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 find_package(Threads)
 
 # -------------------------------- SERVER SOURCES -------------------------------- #
-set(SRCS_SERVER ${SRCS_SERVER_DIR}/src.cpp
+set(SRCS_SERVER ${SRCS_SERVER_DIR}/jsonReader.cpp
+                ${SRCS_SERVER_DIR}/Error.cpp
 )
 
 # -------------------------------- TESTS SERVER -------------------------------- #
-set(TESTS_SERVER ${TESTS_SERVER_DIR}/test.cpp
+set(TESTS_SERVER ${TESTS_SERVER_DIR}/test_jsonReader.cpp
 )
 
 add_executable(unit_tests_server ${TESTS_SERVER} ${SRCS_SERVER})
