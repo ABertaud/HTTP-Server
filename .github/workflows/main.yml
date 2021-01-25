@@ -20,6 +20,9 @@ jobs:
           echo "Directory contains"
           ls -la
 
+      - name: Install conan
+        run: sudo apt-get install conan
+
       - name: Launch unit tests
         run: ./github-action-script.sh
 
