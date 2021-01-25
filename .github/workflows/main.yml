@@ -10,6 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+
       - uses: actions/checkout@v2
 
       - name: Run a multiple line script
@@ -21,9 +22,19 @@ jobs:
           ls -la
 
       - name: Install conan
-        run: sudo apt-get install conan
+        run: |
+          echo "[RUN INSTALL CONAN]"
+          sudo pip install conan
 
-      - name: Launch unit tests
-        run: ./github-action-script.sh
+      - name: Launch conan install
+        run: ./scripts/action-script-install.sh
 
+      - name: Launch Criterion install
+        run: ./scripts/install_criterion.sh
+
+      - name: Build code with cmake
+        run: ./scripts/action-script-build.sh
+
+      - name: Run the tests
+        run: ./scripts/action-script-launch-test.sh
       
