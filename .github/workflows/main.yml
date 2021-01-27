@@ -1,0 +1,40 @@
+name: Getting Started
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@v2
+
+      - name: Run a multiple line script
+        run: |
+          echo "This job is a test to ensure it works"
+          echo "We are in "
+          pwd
+          echo "Directory contains"
+          ls -la
+
+      - name: Install conan
+        run: |
+          echo "[RUN INSTALL CONAN]"
+          sudo pip install conan
+
+      - name: Launch conan install
+        run: ./scripts/action-script-install.sh
+
+      - name: Launch Criterion install
+        run: ./scripts/install_criterion.sh
+
+      - name: Build code with cmake
+        run: ./scripts/action-script-build.sh
+
+      - name: Run the tests
+        run: ./scripts/action-script-launch-test.sh
+      
