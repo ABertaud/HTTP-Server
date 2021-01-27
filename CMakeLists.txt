@@ -12,6 +12,9 @@ find_package(Threads)
 set(SRCS_SERVER ${SRCS_SERVER_DIR}/main.cpp
                 ${SRCS_SERVER_DIR}/jsonReader.cpp
                 ${SRCS_SERVER_DIR}/Error.cpp
+                ${SRCS_SERVER_DIR}/pathHandler.cpp
+                ${SRCS_SERVER_DIR}/serverCore.cpp
+                ${SRCS_SERVER_DIR}/tcpConnection.cpp
 )
 
 add_executable(zia ${SRCS_SERVER})

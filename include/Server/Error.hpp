@@ -42,4 +42,31 @@ class ErrorBadConfigPath : public ErrorJsonReader
         ~ErrorBadConfigPath() = default;
 };
 
+class ErrorArgs : public Error
+{
+    public:
+        ErrorArgs(const std::string& err);
+        ErrorArgs(const ErrorArgs& other) = default;
+        ErrorArgs& operator=(const ErrorArgs& other) = default;
+        ~ErrorArgs() = default;
+};
+
+class ErrorNbArgs : public ErrorArgs
+{
+    public:
+        ErrorNbArgs();
+        ErrorNbArgs(const ErrorNbArgs& other) = default;
+        ErrorNbArgs& operator=(const ErrorNbArgs& other) = default;
+        ~ErrorNbArgs() = default;
+};
+
+class ErrorConfigPath : public ErrorArgs
+{
+    public:
+        ErrorConfigPath();
+        ErrorConfigPath(const ErrorConfigPath& other) = default;
+        ErrorConfigPath& operator=(const ErrorConfigPath& other) = default;
+        ~ErrorConfigPath() = default;
+};
+
 #endif /* !ERROR_HPP_ */

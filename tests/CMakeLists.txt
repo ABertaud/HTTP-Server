@@ -9,10 +9,14 @@ find_package(Threads)
 # -------------------------------- SERVER SOURCES -------------------------------- #
 set(SRCS_SERVER ${SRCS_SERVER_DIR}/jsonReader.cpp
                 ${SRCS_SERVER_DIR}/Error.cpp
+                ${SRCS_SERVER_DIR}/pathHandler.cpp
+                ${SRCS_SERVER_DIR}/serverCore.cpp
+                ${SRCS_SERVER_DIR}/tcpConnection.cpp
 )
 
 # -------------------------------- TESTS SERVER -------------------------------- #
-set(TESTS_SERVER ${TESTS_SERVER_DIR}/test_jsonReader.cpp
+set(TESTS_SERVER ${TESTS_SERVER_DIR}/testJsonReader.cpp
+                 ${TESTS_SERVER_DIR}/testPathHandler.cpp
 )
 
 add_executable(unit_tests_server ${TESTS_SERVER} ${SRCS_SERVER})

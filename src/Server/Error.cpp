@@ -23,3 +23,16 @@ ErrorJsonReader::ErrorJsonReader(const std::string& err) : Error(err)
 ErrorBadConfigPath::ErrorBadConfigPath() : ErrorJsonReader("Error: The given path isn't valid.")
 {
 }
+
+
+ErrorArgs::ErrorArgs(const std::string& err) : Error(err)
+{
+}
+
+ErrorNbArgs::ErrorNbArgs() : ErrorArgs("Error: wrong number of arguments.")
+{
+}
+
+ErrorConfigPath::ErrorConfigPath(): ErrorArgs("Error: the default's path or the path given as argument isn't valid.")
+{
+}

@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2020
 ** B-YEP-500-NAN-5-1-zia-arthur.bertaud
 ** File description:
-** test_jsonReader.cpp
+** testJsonReader.cpp
 */
 
 #include <criterion/criterion.h>
