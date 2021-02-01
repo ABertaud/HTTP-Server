@@ -8,14 +8,14 @@
 #include "serverCore.hpp"
 #include "tcpConnection.hpp"
 
-serverCore::serverCore(boost::asio::io_context& ioContext, const std::string& configPath) : _acceptor(ioContext, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), 8080))
+serverCore::serverCore(boost::asio::io_context& ioContext, const std::string& configPath, const std::string& dirPath) : _acceptor(ioContext, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), 8080)), _paths({dirPath ,configPath})
 {
     startAccept();
 }
 
 void serverCore::startAccept()
 {
-    tcpConnection::pointer newConnection = tcpConnection::create(_acceptor.get_executor().context());
+    tcpConnection::pointer newConnection = tcpConnection::create(_acceptor.get_executor().context(), _paths);
 
     _acceptor.async_accept(newConnection->getSocket(), boost::bind(&serverCore::handleAccept, 
     this, newConnection,boost::asio::placeholders::error));

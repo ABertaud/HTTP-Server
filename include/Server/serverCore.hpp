@@ -15,7 +15,7 @@
 
 class serverCore {
     public:
-        serverCore(boost::asio::io_context& ioContext, const std::string& configPath);
+        serverCore(boost::asio::io_context& ioContext, const std::string& configPath, const std::string& dirPath);
         void start();
         void stop();
         serverCore(const serverCore& other) = default;
@@ -25,6 +25,7 @@ class serverCore {
         void startAccept();
         void handleAccept(tcpConnection::pointer newConnection, const boost::system::error_code& error);
         boost::asio::ip::tcp::acceptor _acceptor;
+        configPaths _paths;
 
 };
 

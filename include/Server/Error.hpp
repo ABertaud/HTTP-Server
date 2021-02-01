@@ -69,4 +69,13 @@ class ErrorConfigPath : public ErrorArgs
         ~ErrorConfigPath() = default;
 };
 
+class ErrorDirPath : public ErrorArgs
+{
+    public:
+        ErrorDirPath();
+        ErrorDirPath(const ErrorDirPath& other) = default;
+        ErrorDirPath& operator=(const ErrorDirPath& other) = default;
+        ~ErrorDirPath() = default;
+};
+
 #endif /* !ERROR_HPP_ */

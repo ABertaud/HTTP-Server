@@ -8,14 +8,14 @@
 #include "tcpConnection.hpp"
 #include <iostream>
 
-tcpConnection::tcpConnection(boost::asio::io_context& ioContext) : _socket(ioContext)
+tcpConnection::tcpConnection(boost::asio::io_context& ioContext, const configPaths& paths) : _socket(ioContext)
 {
-    std::memset(_data, '\0', BUFFER_SIZE);
+    (void)paths;
 }
 
-tcpConnection::pointer tcpConnection::create(boost::asio::io_context& ioContext)
+tcpConnection::pointer tcpConnection::create(boost::asio::io_context& ioContext, const configPaths& paths)
 {
-    return pointer(new tcpConnection(ioContext));
+    return pointer(new tcpConnection(ioContext, paths));
 }
 
 boost::asio::ip::tcp::socket& tcpConnection::getSocket()
@@ -25,6 +25,7 @@ boost::asio::ip::tcp::socket& tcpConnection::getSocket()
 
 void tcpConnection::start()
 {
+    std::memset(_data, '\0', BUFFER_SIZE);
     _socket.async_read_some(boost::asio::buffer(_data, BUFFER_SIZE),
     boost::bind(&tcpConnection::handleRead, shared_from_this(),
     boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));

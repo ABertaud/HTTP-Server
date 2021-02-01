@@ -15,6 +15,11 @@ enum pathType {
     DIR
 };
 
+struct configPaths {
+    std::string dirPath;
+    std::string configPath;
+};
+
 class pathHandler {
     public:
         pathHandler(const pathType& type);

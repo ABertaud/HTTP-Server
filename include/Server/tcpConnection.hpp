@@ -12,6 +12,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/asio.hpp>
+#include "pathHandler.hpp"
 
 #define BUFFER_SIZE (4096)
 
@@ -19,14 +20,14 @@ class tcpConnection : public boost::enable_shared_from_this<tcpConnection> {
     public:
         typedef boost::shared_ptr<tcpConnection> pointer;
 
-        static pointer create(boost::asio::io_context& ioContext);
+        static pointer create(boost::asio::io_context& ioContext, const configPaths& paths);
         void start();
         boost::asio::ip::tcp::socket& getSocket();
         tcpConnection(const tcpConnection& other) = default;
         tcpConnection& operator=(const tcpConnection& other) = default;
         ~tcpConnection() = default;
     private:
-        tcpConnection(boost::asio::io_context& ioContext);
+        tcpConnection(boost::asio::io_context& ioContext, const configPaths& paths);
         void handleWrite(const boost::system::error_code& /*error*/, size_t /*bytesTransferred*/);
         void handleRead(const boost::system::error_code& err, size_t bytesTransferred);
         void send(const std::string& toSend);

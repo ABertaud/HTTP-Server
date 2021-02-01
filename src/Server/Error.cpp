@@ -36,3 +36,7 @@ ErrorNbArgs::ErrorNbArgs() : ErrorArgs("Error: wrong number of arguments.")
 ErrorConfigPath::ErrorConfigPath(): ErrorArgs("Error: the default's path or the path given as argument isn't valid.")
 {
 }
+
+ErrorDirPath::ErrorDirPath() : ErrorArgs("Error: the path given as argument isn't a directory.")
+{
+}

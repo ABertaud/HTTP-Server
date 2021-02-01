@@ -19,18 +19,28 @@ int main(int ac, char **av)
     // lines["koko"].push_back("hey");
     // for (auto& line: lines["koko"])
     //     std::cout << line << std::endl;
-
+    if (ac < 3) {
+        std::cout << "./zia [configPath] [dirModulesPath]" << std::endl;
+        std::cout << "[configPath]: Path to the JSON configuration file." << std::endl;
+        std::cout << "[dirModulesPath]: Path to the modules directory." << std::endl;
+        return (0);
+    }
     try
     {
         pathHandler hdl(pathType::REGULAR_FILE);
-        if (ac > 2)
+        pathHandler hdlDir(pathType::DIR);
+        if (ac > 3)
             throw ErrorNbArgs();
-        else if (ac == 2)
+        else if (ac == 3) {
             hdl.setPath(av[1]);
+            hdlDir.setPath(av[2]);
+        }
         if (hdl.isFileValid() == false)
             throw ErrorConfigPath();
+        else if (hdlDir.isDirValid() == false)
+            throw ErrorDirPath();
         boost::asio::io_context ioContext;
-        serverCore server(ioContext, hdl.getPath());
+        serverCore server(ioContext, hdl.getPath(), hdlDir.getPath());
         server.start();
     } catch (Error& e) {
         std::cerr << e.what() << std::endl;
