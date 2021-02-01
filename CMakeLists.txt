@@ -16,7 +16,9 @@ set(SRCS_SERVER ${SRCS_SERVER_DIR}/main.cpp
                 ${SRCS_SERVER_DIR}/serverCore.cpp
                 ${SRCS_SERVER_DIR}/tcpConnection.cpp
                 ${SRCS_SERVER_DIR}/processingList.cpp
+                ${SRCS_SERVER_DIR}/requestManager.cpp
 )
+
 
 add_executable(zia ${SRCS_SERVER})
 target_compile_features(zia PRIVATE cxx_std_17)
@@ -27,6 +29,7 @@ target_compile_options(zia
 target_include_directories(zia PRIVATE SYSTEM ${INCLUDES_SERVER_DIR})
 target_link_libraries(zia ${CONAN_LIBS})
 target_link_libraries(zia ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(zia ${CMAKE_DL_LIBS})
 
 if (UNIX)
     include(CTest)

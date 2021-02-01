@@ -13,6 +13,7 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/asio.hpp>
 #include "pathHandler.hpp"
+#include "requestManager.hpp"
 
 #define BUFFER_SIZE (4096)
 
@@ -33,6 +34,7 @@ class tcpConnection : public boost::enable_shared_from_this<tcpConnection> {
         void send(const std::string& toSend);
         boost::asio::ip::tcp::socket _socket;
         std::string _message;
+        requestManager _reqManager;
         char _data[BUFFER_SIZE];
 };
 #endif /* !TCPCONNECTION_HPP_ */
