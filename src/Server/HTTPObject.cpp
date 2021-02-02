@@ -54,7 +54,7 @@ void HTTP::HTTPObject::deleteElemContent(const reqElem& elem, const std::string&
 {
     std::size_t size = 0;
 
-    if (!isElem(elem, key) || elem == HTTP::HEADERS)
+    if (!isElem(elem, key) || (elem == HTTP::HEADERS && (key.compare("Content-Length") != 0)))
         return;
     size = this->operator[](elem)[key].size();
     if (size > 0) {
@@ -95,12 +95,15 @@ void HTTP::HTTPObject::parseStartLine(const std::string& request)
     std::string strTarget = strRaw.substr(strRaw.find_first_of(' ')+1, (strRaw.find_last_of(' ')-strMethod.size()-1));
     std::string strVersion = strRaw.substr(strRaw.find_last_of(' ')+1, strRaw.size());
 
-    if (strRaw.empty() || strMethod.empty() || strTarget.empty() || strVersion.empty())
-        throw (ErrorBadRequest("Error: Request has no start line"));
-    _startLine["Raw"].push_back(strRaw);
-    _startLine["Method"].push_back(strMethod);
-    _startLine["Target"].push_back(strTarget);
-    _startLine["Version"].push_back(strVersion);
+    if (strMethod.compare("GET") == 0 || strMethod.compare("POST") == 0 ||\
+    strMethod.compare("DELETE") == 0 || strMethod.compare("PUT") == 0) {
+        _startLine["Raw"].push_back(strRaw);
+        _startLine["Method"].push_back(strMethod);
+        _startLine["Target"].push_back(strTarget);
+        _startLine["Version"].push_back(strVersion);
+    }
+    else
+        throw (ErrorBadRequest("Error: Unknown HTTP Method"));
 }
 
 void HTTP::HTTPObject::parseHeaders(const std::string& request)

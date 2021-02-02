@@ -63,7 +63,7 @@ Content-Length: 36\n\n\
     cr_assert_eq(_obj.toString(), req1);
 }
 
-Test(validRequestDeleteHeader, HTTPObject)
+Test(validRequestDeleteContentLength, HTTPObject)
 {
     std::string req1 = "POST / HTTP/1.1\n\
 Host: 127.0.0.1:8084\n\
@@ -78,7 +78,7 @@ Host: 127.0.0.1:8084\n\
 User-Agent: curl/7.64.0\n\
 Accept: */*\n\
 Content-Type: application/json\n\
-Content-Length: \n\n\
+Content-Length: 36\n\n\
 {\"name\": \"New item\", \"year\": \"2009\"}";
 
     HTTP::HTTPObject _obj(req1);
@@ -170,6 +170,6 @@ Content-Length: 30\n\n\
     try {
         HTTP::HTTPObject _obj(req);
     } catch (Error &e) {
-        cr_assert(std::strcmp(e.what(), "Error: Request has no start line") == 0);
+        cr_assert(std::strcmp(e.what(), "Error: Unknown HTTP Method") == 0);
     }
 }
