@@ -19,7 +19,7 @@ User-Agent: curl/7.64.0\n\
 Accept: */*\n\
 Content-Type: application/json\n\
 Content-Length: 36\n\n\
-{\"name\": \"New item\", \"year\": \"2009\"}\n";
+{\"name\": \"New item\", \"year\": \"2009\"}";
     HTTP::HTTPObject _obj(req);
 
     cr_assert_eq(_obj.toString(), req);
@@ -33,7 +33,7 @@ User-Agent: curl/7.64.0\n\
 Accept: */*\n\
 Content-Type: application/json\n\
 Content-Length: 36\n\n\
-{\"name\": \"New item\", \"year\": \"2009\"}\n";
+{\"name\": \"New item\", \"year\": \"2009\"}";
 
     std::string req2 = "POST / HTTP/1.1\n\
 Host: 127.0.0.1:8084\n\
@@ -41,7 +41,7 @@ User-Agent: curl/7.64.0\n\
 Accept: */*\n\
 Content-Type: application/json\n\
 Content-Length: 666\n\n\
-{\"name\": \"New item\", \"year\": \"2009\"}\n";
+{\"name\": \"New item\", \"year\": \"2009\"}";
 
     HTTP::HTTPObject _obj(req1);
     _obj.modifyElemContent(HTTP::HEADERS, "Content-Length", "666");
@@ -56,7 +56,7 @@ User-Agent: curl/7.64.0\n\
 Accept: */*\n\
 Content-Type: application/json\n\
 Content-Length: 36\n\n\
-{\"name\": \"New item\", \"year\": \"2009\"}\n";
+{\"name\": \"New item\", \"year\": \"2009\"}";
 
     HTTP::HTTPObject _obj(req1);
     _obj.modifyElemContent(HTTP::HEADERS, "Host", "OUI");
@@ -71,7 +71,7 @@ User-Agent: curl/7.64.0\n\
 Accept: */*\n\
 Content-Type: application/json\n\
 Content-Length: 36\n\n\
-{\"name\": \"New item\", \"year\": \"2009\"}\n";
+{\"name\": \"New item\", \"year\": \"2009\"}";
 
     std::string req2 = "POST / HTTP/1.1\n\
 Host: 127.0.0.1:8084\n\
@@ -79,7 +79,7 @@ User-Agent: curl/7.64.0\n\
 Accept: */*\n\
 Content-Type: application/json\n\
 Content-Length: \n\n\
-{\"name\": \"New item\", \"year\": \"2009\"}\n";
+{\"name\": \"New item\", \"year\": \"2009\"}";
 
     HTTP::HTTPObject _obj(req1);
     _obj.deleteElemContent(HTTP::HEADERS, "Content-Length");
@@ -94,7 +94,7 @@ User-Agent: curl/7.64.0\n\
 Accept: */*\n\
 Content-Type: application/json\n\
 Content-Length: 36\n\n\
-{\"name\": \"New item\", \"year\": \"2009\"}\n";
+{\"name\": \"New item\", \"year\": \"2009\"}";
 
     HTTP::HTTPObject _obj(req1);
     _obj.deleteElemContent(HTTP::HEADERS, "UNKNOWN");
@@ -109,7 +109,7 @@ User-Agent: curl/7.64.0\n\
 Accept: */*\n\
 Content-Type: application/json\n\
 Content-Length: 36\n\n\
-{\"name\": \"New item\", \"year\": \"2009\"}\n";
+{\"name\": \"New item\", \"year\": \"2009\"}";
 
     HTTP::HTTPObject _obj(req1);
     _obj.deleteElemContent(HTTP::HEADERS, "Host", 170);
@@ -124,7 +124,7 @@ User-Agent: curl/7.64.0\n\
 Accept: */*\n\
 Content-Type: application/json\n\
 Content-Length: 30\n\n\
-{\"name\": \"New item\", \"year\": \"2009\"}\n";
+{\"name\": \"New item\", \"year\": \"2009\"}";
     try {
         HTTP::HTTPObject _obj(req);
     } catch (Error &e) {
@@ -139,7 +139,7 @@ User-Agent: curl/7.64.0\n\
 Accept: */*\n\
 Content-Type: application/json\n\
 Content-Length: 30\n\n\
-{\"name\": \"New item\", \"year\": \"2009\"}\n";
+{\"name\": \"New item\", \"year\": \"2009\"}";
     try {
         HTTP::HTTPObject _obj(req);
     } catch (Error &e) {
@@ -165,7 +165,7 @@ User-Agent: curl/7.64.0\n\
 Accept: */*\n\
 Content-Type: application/json\n\
 Content-Length: 30\n\n\
-{\"name\": \"New item\", \"year\": \"2009\"}\n";
+{\"name\": \"New item\", \"year\": \"2009\"}";
 
     try {
         HTTP::HTTPObject _obj(req);
