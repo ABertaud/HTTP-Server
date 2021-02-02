@@ -16,6 +16,10 @@ const char *Error::what() const noexcept
     return (_message.c_str());
 }
 
+ErrorDLLoader::ErrorDLLoader(const std::string& err) : Error(err)
+{
+}
+
 ErrorJsonReader::ErrorJsonReader(const std::string& err) : Error(err)
 {
 }

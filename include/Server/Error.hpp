@@ -24,6 +24,15 @@ class Error : public std::exception
         ~Error() = default;
 };
 
+class ErrorDLLoader : public Error
+{
+    public:
+        ErrorDLLoader(const std::string& err);
+        ErrorDLLoader(const ErrorDLLoader& other) = default;
+        ErrorDLLoader& operator=(const ErrorDLLoader& other) = default;
+        ~ErrorDLLoader() = default;
+};
+
 class ErrorJsonReader : public Error
 {
     public:

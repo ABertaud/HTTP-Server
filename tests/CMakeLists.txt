@@ -14,6 +14,7 @@ set(SRCS_SERVER ${SRCS_SERVER_DIR}/jsonReader.cpp
                 ${SRCS_SERVER_DIR}/tcpConnection.cpp
                 ${SRCS_SERVER_DIR}/processingList.cpp
                 ${SRCS_SERVER_DIR}/HTTPObject.cpp
+                ${SRCS_SERVER_DIR}/requestManager.cpp
 )
 
 # -------------------------------- TESTS SERVER -------------------------------- #
@@ -34,4 +35,5 @@ target_include_directories(unit_tests_server PRIVATE SYSTEM ${INCLUDES_SERVER_DI
 target_link_libraries(unit_tests_server criterion)
 target_link_libraries(unit_tests_server ${CONAN_LIBS})
 target_link_libraries(unit_tests_server ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(unit_tests_server ${CMAKE_DL_LIBS})
 add_test(second unit_tests_server)
