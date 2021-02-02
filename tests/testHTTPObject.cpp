@@ -73,17 +73,9 @@ Content-Type: application/json\n\
 Content-Length: 36\n\n\
 {\"name\": \"New item\", \"year\": \"2009\"}";
 
-    std::string req2 = "POST / HTTP/1.1\n\
-Host: 127.0.0.1:8084\n\
-User-Agent: curl/7.64.0\n\
-Accept: */*\n\
-Content-Type: application/json\n\
-Content-Length: 36\n\n\
-{\"name\": \"New item\", \"year\": \"2009\"}";
-
     HTTP::HTTPObject _obj(req1);
     _obj.deleteElemContent(HTTP::HEADERS, "Content-Length");
-    cr_assert_eq(_obj.toString(), req2);
+    cr_assert_eq(_obj.toString(), req1);
 }
 
 Test(validRequestDeleteUnknown, HTTPObject)

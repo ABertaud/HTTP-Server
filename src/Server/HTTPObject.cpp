@@ -54,7 +54,7 @@ void HTTP::HTTPObject::deleteElemContent(const reqElem& elem, const std::string&
 {
     std::size_t size = 0;
 
-    if (!isElem(elem, key) || (elem == HTTP::HEADERS && (key.compare("Content-Length") != 0)))
+    if (!isElem(elem, key) || (elem == HTTP::HEADERS && (key.compare("Content-Length") == 0)))
         return;
     size = this->operator[](elem)[key].size();
     if (size > 0) {
