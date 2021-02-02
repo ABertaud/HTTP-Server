@@ -40,3 +40,19 @@ ErrorConfigPath::ErrorConfigPath(): ErrorArgs("Error: the default's path or the 
 ErrorDirPath::ErrorDirPath() : ErrorArgs("Error: the path given as argument isn't a directory.")
 {
 }
+
+ErrorHTTPObject::ErrorHTTPObject(const std::string& err) : Error(err)
+{
+}
+
+ErrorBadRequest::ErrorBadRequest(const std::string& err) : ErrorHTTPObject(err)
+{
+}
+
+ErrorContentSize::ErrorContentSize() : ErrorBadRequest("Error: The content-length is not valid.")
+{
+}
+
+ErrorNoHost::ErrorNoHost() : ErrorBadRequest("Error: No host was specified in the request headers")
+{
+}

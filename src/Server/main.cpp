@@ -13,12 +13,6 @@
 
 int main(int ac, char **av)
 {
-
-    // std::unordered_map<std::string, std::vector<std::string>> lines;
-
-    // lines["koko"].push_back("hey");
-    // for (auto& line: lines["koko"])
-    //     std::cout << line << std::endl;
     if (ac < 3) {
         std::cout << "./zia [configPath] [dirModulesPath]" << std::endl;
         std::cout << "[configPath]: Path to the JSON configuration file." << std::endl;
@@ -60,5 +54,13 @@ int main(int ac, char **av)
     // } catch (Error const &err) {
     //     std::cout << err.what();
     //     return (84);
+
+    // if (ac != 2)
+    //     return (-1);
+    // std::ifstream t(av[1]);
+    // std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
+    // HTTP::HTTPObject _obj(str);
+    // _obj.modifyElemContent(HTTP::HEADERS, "Host", "tg");
+    // std::cout << _obj.toString() << std::endl;
     return (0);
 }

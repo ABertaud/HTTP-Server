@@ -78,4 +78,43 @@ class ErrorDirPath : public ErrorArgs
         ~ErrorDirPath() = default;
 };
 
+/** HTTPObject Error classes **/
+
+class ErrorHTTPObject : public Error
+{
+    public:
+        ErrorHTTPObject(const std::string& err);
+        ErrorHTTPObject(const ErrorHTTPObject& other) = default;
+        ErrorHTTPObject& operator=(const ErrorHTTPObject& other) = default;
+        ~ErrorHTTPObject() = default;
+};
+
+class ErrorBadRequest : public ErrorHTTPObject
+{
+    public:
+        ErrorBadRequest(const std::string& err);
+        ErrorBadRequest(const ErrorBadRequest& other) = default;
+        ErrorBadRequest& operator=(const ErrorBadRequest& other) = default;
+        ~ErrorBadRequest() = default;
+};
+
+class ErrorContentSize : public ErrorBadRequest
+{
+    public:
+        ErrorContentSize();
+        ErrorContentSize(const ErrorContentSize& other) = default;
+        ErrorContentSize& operator=(const ErrorContentSize& other) = default;
+        ~ErrorContentSize() = default;
+};
+
+class ErrorNoHost : public ErrorBadRequest
+{
+    public:
+        ErrorNoHost();
+        ErrorNoHost(const ErrorNoHost& other) = default;
+        ErrorNoHost& operator=(const ErrorNoHost& other) = default;
+        ~ErrorNoHost() = default;
+};
+
+
 #endif /* !ERROR_HPP_ */

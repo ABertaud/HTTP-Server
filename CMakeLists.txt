@@ -16,6 +16,7 @@ set(SRCS_SERVER ${SRCS_SERVER_DIR}/main.cpp
                 ${SRCS_SERVER_DIR}/serverCore.cpp
                 ${SRCS_SERVER_DIR}/tcpConnection.cpp
                 ${SRCS_SERVER_DIR}/processingList.cpp
+                ${SRCS_SERVER_DIR}/HTTPObject.cpp
 )
 
 add_executable(zia ${SRCS_SERVER})

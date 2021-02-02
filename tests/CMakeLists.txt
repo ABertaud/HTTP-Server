@@ -13,12 +13,14 @@ set(SRCS_SERVER ${SRCS_SERVER_DIR}/jsonReader.cpp
                 ${SRCS_SERVER_DIR}/serverCore.cpp
                 ${SRCS_SERVER_DIR}/tcpConnection.cpp
                 ${SRCS_SERVER_DIR}/processingList.cpp
+                ${SRCS_SERVER_DIR}/HTTPObject.cpp
 )
 
 # -------------------------------- TESTS SERVER -------------------------------- #
 set(TESTS_SERVER ${TESTS_SERVER_DIR}/testJsonReader.cpp
                  ${TESTS_SERVER_DIR}/testPathHandler.cpp
                  ${TESTS_SERVER_DIR}/testProcessingList.cpp
+                 ${TESTS_SERVER_DIR}/testHTTPObject.cpp
 
 )
 
