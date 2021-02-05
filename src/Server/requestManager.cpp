@@ -18,7 +18,23 @@ void requestManager::reload(std::unordered_map<moduleType, std::string>& moduleP
 
 void requestManager::launchRequest(const std::string& req, processingList& list, boost::asio::ip::tcp::socket& socket)
 {
+    try {
+        HTTP::HTTPObject request(req);
+        moduleType type = list.getCurrentType();
 
+        while (type != moduleType::NONE) {
+            for (auto &mod : _modules)
+                if (mod->getModuleType() == type)
+                    mod->processRequest(request);
+            list.remove();
+            type = list.getCurrentType();
+        }
+        auto answer = request.toString();
+        socket.send(boost::asio::buffer(answer));
+    } catch (ErrorHTTPObject& e) {
+        socket.send(boost::asio::buffer("400 Bad Request Error"));
+        return;
+    }
 }
 
 void requestManager::loadModules(std::unordered_map<moduleType, std::string>& modulePaths)
@@ -27,7 +43,7 @@ void requestManager::loadModules(std::unordered_map<moduleType, std::string>& mo
         if (_loaders.count(path.first) == 0)
             _loaders.insert(std::make_pair(path.first, std::unique_ptr<DLLoader>{new DLLoader(path.second)}));
     }
-    for (auto &load : _loaders) {
+    for (auto& load : _loaders) {
         if (doesModuleExist(load.first) == false)
             _modules.push_back(load.second->getInstance<IModule>("entryPoint"));
     }

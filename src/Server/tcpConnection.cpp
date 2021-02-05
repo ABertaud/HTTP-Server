@@ -40,9 +40,7 @@ void tcpConnection::handleRead(const boost::system::error_code& err, size_t byte
 {
     (void)bytesTransferred;
     if (!err) {
-        // parseData();
-        // send("sup");
-        std::cout << _data << std::endl;
+        // _reqManager.launchRequest(req, socket);
         start();
     } else {
         std::cerr << "error: " << err.message() << std::endl;

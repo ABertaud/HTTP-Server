@@ -9,13 +9,12 @@
 #define IMODULE_HPP_
 
 #include "moduleType.hpp"
-
-class HTTPObject;
+#include "HTTPObject.hpp"
 
 class IModule {
     public:
     virtual ~IModule() = default;
-    virtual void processRequest(const HTTPObject &req) = 0;
+    virtual void processRequest(HTTP::HTTPObject& req) = 0;
     virtual moduleType getModuleType()= 0;
     private:
 };
