@@ -125,5 +125,30 @@ class ErrorNoHost : public ErrorBadRequest
         ~ErrorNoHost() = default;
 };
 
+class ErrorConfigFile : public Error
+{
+    public:
+        ErrorConfigFile(const std::string& err);
+        ErrorConfigFile(const ErrorConfigFile& other) = default;
+        ErrorConfigFile& operator=(const ErrorConfigFile& other) = default;
+        ~ErrorConfigFile() = default;
+};
 
+class ErrorConfigTag : public ErrorConfigFile
+{
+    public:
+        ErrorConfigTag();
+        ErrorConfigTag(const ErrorConfigTag& other) = default;
+        ErrorConfigTag& operator=(const ErrorConfigTag& other) = default;
+        ~ErrorConfigTag() = default;
+};
+
+class ErrorConfigSo : public ErrorConfigFile
+{
+    public:
+        ErrorConfigSo();
+        ErrorConfigSo(const ErrorConfigSo& other) = default;
+        ErrorConfigSo& operator=(const ErrorConfigSo& other) = default;
+        ~ErrorConfigSo() = default;
+};
 #endif /* !ERROR_HPP_ */

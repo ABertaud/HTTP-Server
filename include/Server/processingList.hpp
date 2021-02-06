@@ -16,6 +16,7 @@ class processingList {
     processingList() = default;
     void add(const moduleType& type, const unsigned int pos = 0);
     void remove(const unsigned int pos = 0);
+    void clear();
     moduleType getCurrentType() const;
     processingList(const processingList& other) = default;
     processingList& operator=(const processingList& other) = default;

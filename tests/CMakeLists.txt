@@ -15,6 +15,7 @@ set(SRCS_SERVER ${SRCS_SERVER_DIR}/jsonReader.cpp
                 ${SRCS_SERVER_DIR}/processingList.cpp
                 ${SRCS_SERVER_DIR}/HTTPObject.cpp
                 ${SRCS_SERVER_DIR}/requestManager.cpp
+                ${SRCS_SERVER_DIR}/configHandler.cpp
 )
 
 # -------------------------------- TESTS SERVER -------------------------------- #
@@ -22,6 +23,7 @@ set(TESTS_SERVER ${TESTS_SERVER_DIR}/testJsonReader.cpp
                  ${TESTS_SERVER_DIR}/testPathHandler.cpp
                  ${TESTS_SERVER_DIR}/testProcessingList.cpp
                  ${TESTS_SERVER_DIR}/testHTTPObject.cpp
+                 ${TESTS_SERVER_DIR}/testConfigHandler.cpp
 
 )
 

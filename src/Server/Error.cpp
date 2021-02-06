@@ -60,3 +60,15 @@ ErrorContentSize::ErrorContentSize() : ErrorBadRequest("Error: The content-lengt
 ErrorNoHost::ErrorNoHost() : ErrorBadRequest("Error: No host was specified in the request headers")
 {
 }
+
+ErrorConfigFile::ErrorConfigFile(const std::string& err) : Error(err)
+{
+}
+
+ErrorConfigTag::ErrorConfigTag() : ErrorConfigFile("Error config file: the tag doesn't exist")
+{
+}
+
+ErrorConfigSo::ErrorConfigSo() : ErrorConfigFile("Error config file: one module doesn't exist")
+{
+}

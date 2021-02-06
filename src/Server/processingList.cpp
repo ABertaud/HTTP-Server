@@ -26,6 +26,11 @@ void processingList::remove(const unsigned int pos)
         _list.erase(_list.begin() + pos);
 }
 
+void processingList::clear()
+{
+    _list.clear();
+}
+
 moduleType processingList::getCurrentType() const
 {
     if (_list.size() == 0)

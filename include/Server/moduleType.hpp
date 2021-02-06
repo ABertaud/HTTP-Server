@@ -11,6 +11,8 @@
 enum moduleType {
     PHPCGI,
     SSL,
+    SNAKE,
+    FILE_SERVER,
     NONE
 };
 
