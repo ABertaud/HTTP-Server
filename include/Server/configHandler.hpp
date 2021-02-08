@@ -32,9 +32,9 @@ class configHandler
         configPaths _paths;
         const std::map<std::string, moduleType> _moduleType {
         {"PHP_CGI", PHPCGI},
-        {"SSL/TSL", SSL},
+        {"SSL_TSL", SSL},
         {"Snake", SNAKE},
-        {"File Server", FILE_SERVER},
+        {"File_Server", FILE_SERVER},
         };
         void load();
         void addModuleJson(const std::string& name);

@@ -18,6 +18,7 @@ class processingList {
     void remove(const unsigned int pos = 0);
     void clear();
     moduleType getCurrentType() const;
+    size_t getSize()const;
     processingList(const processingList& other) = default;
     processingList& operator=(const processingList& other) = default;
     ~processingList() = default;

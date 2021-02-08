@@ -33,6 +33,7 @@ target_include_directories(zia PRIVATE SYSTEM ${INCLUDES_SERVER_DIR})
 target_link_libraries(zia ${CONAN_LIBS})
 target_link_libraries(zia ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(zia ${CMAKE_DL_LIBS})
+link_libraries(stdc++fs)
 
 if (UNIX)
     include(CTest)

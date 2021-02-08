@@ -26,6 +26,11 @@ void processingList::remove(const unsigned int pos)
         _list.erase(_list.begin() + pos);
 }
 
+size_t processingList::getSize()const
+{
+    return _list.size();
+}
+
 void processingList::clear()
 {
     _list.clear();
