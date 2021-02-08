@@ -16,6 +16,7 @@ set(SRCS_SERVER ${SRCS_SERVER_DIR}/jsonReader.cpp
                 ${SRCS_SERVER_DIR}/HTTPObject.cpp
                 ${SRCS_SERVER_DIR}/requestManager.cpp
                 ${SRCS_SERVER_DIR}/configHandler.cpp
+                ${SRCS_SERVER_DIR}/SignalHandler.cpp
 )
 
 # -------------------------------- TESTS SERVER -------------------------------- #

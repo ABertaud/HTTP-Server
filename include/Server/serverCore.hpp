@@ -12,6 +12,7 @@
 #include <iostream>
 #include <string>
 #include "tcpConnection.hpp"
+#include "SignalHandler.hpp"
 
 class serverCore {
     public:
@@ -24,9 +25,11 @@ class serverCore {
     private:
         void startAccept();
         void handleAccept(tcpConnection::pointer newConnection, const boost::system::error_code& error);
+        void serverEndHandler(const boost::system::error_code&);
         boost::asio::ip::tcp::acceptor _acceptor;
         configPaths _paths;
-
+        SignalHandler _sigHandler;
+        boost::asio::steady_timer _t;
 };
 
 #endif /* !SERVERCORE_HPP_ */

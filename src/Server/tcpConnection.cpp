@@ -8,9 +8,9 @@
 #include "tcpConnection.hpp"
 #include <iostream>
 
-tcpConnection::tcpConnection(boost::asio::io_context& ioContext, const configPaths& paths) : _socket(ioContext)
+tcpConnection::tcpConnection(boost::asio::io_context& ioContext, const configPaths& paths) : _socket(ioContext), _confHandler(paths)
 {
-    (void)paths;
+    _reqManager.reload(_confHandler.getListModules());
 }
 
 tcpConnection::pointer tcpConnection::create(boost::asio::io_context& ioContext, const configPaths& paths)
@@ -40,6 +40,10 @@ void tcpConnection::handleRead(const boost::system::error_code& err, size_t byte
 {
     (void)bytesTransferred;
     if (!err) {
+        auto pList = _confHandler.getCopyProcessList();
+        std::string req(_data);
+        std::thread reqThread(&requestManager::launchRequest, _reqManager, std::ref(req), std::ref(pList), std::ref(_socket));
+        // reqThread.detach();
         // _reqManager.launchRequest(req, socket);
         start();
     } else {

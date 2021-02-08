@@ -41,7 +41,7 @@ void requestManager::loadModules(std::unordered_map<moduleType, std::string>& mo
 {
     for (auto& path : modulePaths) {
         if (_loaders.count(path.first) == 0)
-            _loaders.insert(std::make_pair(path.first, std::unique_ptr<DLLoader>{new DLLoader(path.second)}));
+            _loaders.insert(std::make_pair(path.first, std::shared_ptr<DLLoader>{new DLLoader(path.second)}));
     }
     for (auto& load : _loaders) {
         if (doesModuleExist(load.first) == false)
