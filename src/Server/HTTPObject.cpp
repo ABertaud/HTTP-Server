@@ -7,8 +7,8 @@
 
 #include "HTTPObject.hpp"
 #include "Error.hpp"
-#include <boost/algorithm/string.hpp>
-#include <boost/algorithm/string/replace.hpp>
+// #include <boost/algorithm/string.hpp>
+// #include <boost/algorithm/string/replace.hpp>
 
 HTTP::HTTPObject::HTTPObject(const std::string& request, const HTTP::HTTPType& type)
 try : _type(type)
@@ -106,12 +106,31 @@ void HTTP::HTTPObject::parseStartLine(const std::string& request)
         throw (ErrorBadRequest("Error: Unknown HTTP Method"));
 }
 
+std::vector<std::string> HTTP::HTTPObject::strToStringVector(const std::string& str, const std::string& delim)
+{
+    std::vector<std::string> toReturn;
+    std::string word = "";
+
+    for (auto x : str) 
+    {
+        if (x == delim.c_str()[0]) {
+            if (word.compare(delim) != 0)
+                toReturn.push_back(word);
+            word = "";
+        }
+        else
+            word = word + x;
+    }
+    if (word.compare(delim) != 0)
+        toReturn.push_back(word);
+    return (toReturn);
+}
+
 void HTTP::HTTPObject::parseHeaders(const std::string& request)
 {
     std::size_t first = request.find_first_of('\n')+1;
     std::size_t last = request.find_last_of('\n');
     std::string header = request.substr(first, last - first + 1);
-    std::string headerCpy = header;
     std::vector<std::string> strs;
     std::string elem;
     std::string key;
@@ -119,9 +138,9 @@ void HTTP::HTTPObject::parseHeaders(const std::string& request)
     if (header.empty())
         throw ErrorNoHost();
     header[header.find_last_of('\n')] = '\0';
-    boost::replace_all(headerCpy, "\n", "\\n");
-    _headers["Raw"].push_back(headerCpy);
-    boost::split(strs, header, boost::is_any_of("\n"), boost::token_compress_on);
+    _headers["Raw"].push_back(header);
+    // boost::split(strs, header, boost::is_any_of("\n"), boost::token_compress_on);
+    strs = strToStringVector(header, "\n");
     for (std::size_t i = 0; i < strs.size(); i++) {
         if (!strs[i].empty()) {
             elem = strs[i].substr(0, strs[i].find_first_of(':'));
@@ -134,10 +153,36 @@ void HTTP::HTTPObject::parseHeaders(const std::string& request)
     }
 }
 
+void HTTP::HTTPObject::createResponse(const std::string& httpCode, const std::string& body)
+{
+    std::string strRes;
+    (void)httpCode;
+
+    this->clear();
+    strRes = "HTTP/1.1 200 OK";
+    _startLine["Raw"].push_back(strRes);
+    _startLine["Version"].push_back("HTTP/1.1");
+    _startLine["Code"].push_back("200");
+    _startLine["Description"].push_back("OK");
+
+    if (!body.empty()) {
+        _headers["Content-Length"].push_back(std::to_string(body.size()));
+        _body["Body"].push_back(body);
+    }
+}
+
+void HTTP::HTTPObject::clear(void)
+{
+    _startLine.clear();
+    _headers.clear();
+    _body.clear();
+}
+
 void HTTP::HTTPObject::parseBody(const std::string& request)
 {
     std::string body = request.substr(request.find_last_of('\n')+1, request.size());
-    _body["Body"].push_back(body);
+    if (!body.empty())
+        _body["Body"].push_back(body);
 }
 
 std::string HTTP::HTTPObject::toString(void)
