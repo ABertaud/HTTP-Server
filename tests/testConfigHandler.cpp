@@ -68,7 +68,7 @@ Test(TestTagErr, configHandler)
         configHandler configHand(paths);
     }
     catch (Error &e) {
-        cr_assert(std::strcmp(e.what(), "Error config file: the tag doesn't exist") == 0);
+        cr_assert(std::strcmp(e.what(), "Error config file: one module name doesn't exist") == 0);
     }
 }
 
