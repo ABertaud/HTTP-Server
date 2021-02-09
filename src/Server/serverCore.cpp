@@ -17,17 +17,19 @@ serverCore::serverCore(boost::asio::io_context& ioContext, const std::string& co
 
 void serverCore::startAccept()
 {
-    // tcpConnection::pointer newConnection;
-    // try {
-    tcpConnection::pointer newConnection = tcpConnection::create(_acceptor.get_executor().context(), _paths);
-    _acceptor.async_accept(newConnection->getSocket(), boost::bind(&serverCore::handleAccept, 
-    this, newConnection,boost::asio::placeholders::error));
-    // } catch (Error& e) {
-    //     std::cout << "close + " << e.what() << std::endl;
-    //     if (newConnection)
-    //         newConnection.reset();
-    //     startAccept();
-    // }
+    tcpConnection::pointer newConnection;
+    try {
+        tcpConnection::pointer newConnection = tcpConnection::create(_acceptor.get_executor().context(), _paths);
+        _acceptor.async_accept(newConnection->getSocket(), boost::bind(&serverCore::handleAccept, 
+        this, newConnection,boost::asio::placeholders::error));
+    } catch (Error& e) {
+        std::cout << "Fail to connect because " << e.what() << std::endl;
+        if (newConnection)
+            newConnection.reset();
+        _acceptor.async_wait(
+        boost::asio::ip::tcp::acceptor::wait_read,
+        boost::bind(&serverCore::startAccept, this));
+    }
 }
 
 void serverCore::handleAccept(tcpConnection::pointer newConnection, const boost::system::error_code& error)
