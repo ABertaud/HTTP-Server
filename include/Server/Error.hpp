@@ -107,6 +107,15 @@ class ErrorBadRequest : public ErrorHTTPObject
         ~ErrorBadRequest() = default;
 };
 
+class ErrorRequestParams : public ErrorHTTPObject
+{
+    public:
+        ErrorRequestParams(const std::string& err);
+        ErrorRequestParams(const ErrorRequestParams& other) = default;
+        ErrorRequestParams& operator=(const ErrorRequestParams& other) = default;
+        ~ErrorRequestParams() = default;
+};
+
 class ErrorContentSize : public ErrorBadRequest
 {
     public:
@@ -124,6 +133,8 @@ class ErrorNoHost : public ErrorBadRequest
         ErrorNoHost& operator=(const ErrorNoHost& other) = default;
         ~ErrorNoHost() = default;
 };
+
+/** Config File **/
 
 class ErrorConfigFile : public Error
 {

@@ -53,6 +53,10 @@ ErrorBadRequest::ErrorBadRequest(const std::string& err) : ErrorHTTPObject(err)
 {
 }
 
+ErrorRequestParams::ErrorRequestParams(const std::string& err) : ErrorHTTPObject(err)
+{
+}
+
 ErrorContentSize::ErrorContentSize() : ErrorBadRequest("Error: The content-length is not valid.")
 {
 }

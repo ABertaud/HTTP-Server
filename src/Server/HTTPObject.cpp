@@ -31,21 +31,24 @@ HTTP::reqType& HTTP::HTTPObject::operator[](const HTTP::reqElem& elem)
         return (_body);
 }
 
-bool HTTP::HTTPObject::isElem(const reqElem& elem, const std::string& key)
+bool HTTP::HTTPObject::isKey(const reqElem& elem, const std::string& key)
 {
     if (this->operator[](elem).count(key) == 0)
         return (false);
     return (true);
 }
 
-std::string HTTP::HTTPObject::getElemConcatContent(const reqElem& elem, const std::string& key)
+std::string HTTP::HTTPObject::getElemConcatContent(const reqElem& elem, const std::string& key, bool displayMode)
 {
     std::string toReturn;
 
-    if (!isElem(elem, key))
+    if (!isKey(elem, key))
         return (toReturn);
     for (std::size_t i = 0; i != this->operator[](elem)[key].size(); i++) {
-        toReturn += this->operator[](elem)[key][i];
+        if (!this->operator[](elem)[key][i].empty())
+            toReturn += this->operator[](elem)[key][i];
+        if (displayMode)
+            toReturn += '\n';
     }
     return (toReturn);
 }
@@ -54,7 +57,7 @@ void HTTP::HTTPObject::deleteElemContent(const reqElem& elem, const std::string&
 {
     std::size_t size = 0;
 
-    if (!isElem(elem, key) || (elem == HTTP::HEADERS && (key.compare("Content-Length") == 0)))
+    if (!isKey(elem, key) || (elem == HTTP::HEADERS && (key.compare("Content-Length") == 0)))
         return;
     size = this->operator[](elem)[key].size();
     if (size > 0) {
@@ -71,7 +74,7 @@ void HTTP::HTTPObject::modifyElemContent(const reqElem& elem, const std::string&
 {
     std::size_t size = 0;
 
-    if (!isElem(elem, key) || (elem == HTTP::HEADERS && (key.compare("Content-Length") != 0)))
+    if (!isKey(elem, key) || (elem == HTTP::HEADERS && (key.compare("Content-Length") != 0)))
         return;
     size = this->operator[](elem)[key].size();
     for (std::size_t i = 0; i != size; i++) {
@@ -88,6 +91,59 @@ void HTTP::HTTPObject::parseRequest(const std::string& request)
     parseBody(request);
 }
 
+void HTTP::HTTPObject::createParamsMap(const std::string& strParams)
+{
+    std::vector<std::string> vec;
+    std::string p1;
+    std::string p2;
+    std::size_t pos = 0;
+
+    vec = strToStringVector(strParams, "&");
+    // check if / after the arguments
+    // like this -> param=2&super=cool/roblox
+
+    for (size_t i = 0; i != vec.size(); i++) {
+        if (!vec.at(i).empty() && (vec.at(i).find("=") != std::string::npos)) {
+            pos = vec.at(i).find("=");
+            p1 = vec.at(i).substr(0, pos);
+            p2 = vec.at(i).substr(pos+1, vec.at(i).size()+pos);
+            _params[p1] = p2;
+        }
+    }
+}
+
+std::string& HTTP::HTTPObject::getParams(const std::string& param)
+{
+    if (_params.count(param) != 0)
+        return (_params[param]);
+    else
+        throw ErrorRequestParams("Error: Param was not found");
+}
+
+void HTTP::HTTPObject::parseTarget(std::string& target)
+{
+    std::vector<std::string> vec;
+    bool isParams = false;
+
+    // maybe decode the target as it may be encoded and or check
+
+    if ((target.find('?') != std::string::npos)) {
+        isParams = true;
+        vec = strToStringVector(target, "?");
+        _startLine["Target"].push_back(vec.at(1));
+        target = vec.at(0);
+    }
+    vec = strToStringVector(target, "/");
+    for (size_t i = 0; i != vec.size(); i++) {
+        if (!vec.at(i).empty())
+            _startLine["Target"].push_back(vec.at(i));
+    }
+    if (isParams) {
+        createParamsMap(_startLine["Target"][1]);
+        _startLine["Target"].erase((_startLine["Target"].begin() + 1));
+    }
+}
+
 void HTTP::HTTPObject::parseStartLine(const std::string& request)
 {
     std::string strRaw = request.substr(0, request.find_first_of('\n'));
@@ -100,6 +156,7 @@ void HTTP::HTTPObject::parseStartLine(const std::string& request)
         _startLine["Raw"].push_back(strRaw);
         _startLine["Method"].push_back(strMethod);
         _startLine["Target"].push_back(strTarget);
+        parseTarget(strTarget);
         _startLine["Version"].push_back(strVersion);
     }
     else
@@ -111,7 +168,12 @@ std::vector<std::string> HTTP::HTTPObject::strToStringVector(const std::string& 
     std::vector<std::string> toReturn;
     std::string word = "";
 
-    for (auto x : str) 
+    if (str.find(delim) == std::string::npos) {
+        toReturn.push_back(str);
+        return (toReturn);
+    }
+
+    for (auto x : str)
     {
         if (x == delim.c_str()[0]) {
             if (word.compare(delim) != 0)
@@ -169,6 +231,7 @@ HTTP::HTTPObject& HTTP::HTTPObject::createResponse([[maybe_unused]]const std::st
         _headersOrderList.push_back("Content-Length");
         _body["Body"].push_back(body);
     }
+    _type = HTTP::RES;
     return (*this);
 }
 
@@ -213,25 +276,11 @@ int HTTP::HTTPObject::checkContent(void)
         return (0);
     if (getElemConcatContent(HTTP::HEADERS, "Host").empty())
         throw ErrorNoHost();
+    if (getElemConcatContent(HTTP::HEADERS, "Content-Length").empty())
+        throw ErrorBadRequest("Error: No 'Content-Length' field but with a body");
     contentLength = std::stoi(this->operator[](HTTP::HEADERS)["Content-Length"][0]);
     bodySize = getElemConcatContent(HTTP::BODY, "Body").size();
     if (contentLength < 0 || contentLength != bodySize)
         throw ErrorContentSize();
     return (0);
-}
-
-std::ostream& operator<<(std::ostream& os, HTTP::HTTPObject& obj)
-{
-    os << "[HTTPObject Display]" << std::endl;
-    os << "-- START LINE --" << std::endl;
-
-    for (auto &it: obj.operator[](HTTP::STARTLINES))
-        os << it.first+": " << "'"+it.second[0]+"'" << std::endl;
-    os << "-- HEADER-- " << std::endl;
-    for (auto& it: obj.operator[](HTTP::HEADERS))
-        os << it.first+": " << "'"+it.second[0]+"'" << std::endl;
-    os << "-- BODY-- " << std::endl;
-    for (auto& it: obj.operator[](HTTP::BODY))
-        os << it.first+": " << "'"+it.second[0]+"'" << std::endl;
-    return (os);
 }
