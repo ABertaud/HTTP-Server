@@ -67,7 +67,7 @@ void HTTP::HTTPObject::deleteElemContent(const reqElem& elem, const std::string&
     }
 }
 
-void HTTP::HTTPObject::modifyElemContent(const reqElem& elem, const std::string& key, const std::string& newVal, std::size_t pos)
+void HTTP::HTTPObject::modifyElemContent(const reqElem& elem, const std::string& key, const std::string& newVal, [[maybe_unused]]std::size_t pos)
 {
     std::size_t size = 0;
 
@@ -153,12 +153,11 @@ void HTTP::HTTPObject::parseHeaders(const std::string& request)
     }
 }
 
-void HTTP::HTTPObject::createResponse(const std::string& httpCode, const std::string& body)
+HTTP::HTTPObject& HTTP::HTTPObject::createResponse([[maybe_unused]]const std::string& httpCode, const std::string& body)
 {
     std::string strRes;
-    (void)httpCode;
 
-    this->clear();
+    clear();
     strRes = "HTTP/1.1 200 OK";
     _startLine["Raw"].push_back(strRes);
     _startLine["Version"].push_back("HTTP/1.1");
@@ -167,14 +166,17 @@ void HTTP::HTTPObject::createResponse(const std::string& httpCode, const std::st
 
     if (!body.empty()) {
         _headers["Content-Length"].push_back(std::to_string(body.size()));
+        _headersOrderList.push_back("Content-Length");
         _body["Body"].push_back(body);
     }
+    return (*this);
 }
 
 void HTTP::HTTPObject::clear(void)
 {
     _startLine.clear();
     _headers.clear();
+    _headersOrderList.clear();
     _body.clear();
 }
 

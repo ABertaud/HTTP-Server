@@ -19,7 +19,7 @@ void serverCore::startAccept()
 {
     tcpConnection::pointer newConnection;
     try {
-        tcpConnection::pointer newConnection = tcpConnection::create(_acceptor.get_executor().context(), _paths);
+        newConnection = tcpConnection::create(_acceptor.get_executor().context(), _paths);
         _acceptor.async_accept(newConnection->getSocket(), boost::bind(&serverCore::handleAccept, 
         this, newConnection,boost::asio::placeholders::error));
     } catch (Error& e) {

@@ -20,16 +20,17 @@ void requestManager::launchRequest(const std::string& req, processingList& list,
 {
     try {
         HTTP::HTTPObject request(req);
-        moduleType type = list.getCurrentType();
+        // moduleType type = list.getCurrentType();
 
-        while (type != moduleType::NONE) {
-            for (auto &mod : _modules)
-                if (mod->getModuleType() == type)
-                    mod->processRequest(request);
-            list.remove();
-            type = list.getCurrentType();
-        }
-        auto answer = request.toString();
+        // while (type != moduleType::NONE) {
+        //     for (auto &mod : _modules)
+        //         if (mod->getModuleType() == type)
+        //             mod->processRequest(request);
+        //     list.remove();
+        //     type = list.getCurrentType();
+        // }
+        std::string body("<!DOCTYPE html><head><title>Zia</title></head><body><center><h1>HTTP 2OO OK</h1></center></body>");
+        auto answer = request.createResponse("200", body).toString();
         socket.send(boost::asio::buffer(answer));
     } catch (ErrorHTTPObject& e) {
         socket.send(boost::asio::buffer("400 Bad Request Error"));

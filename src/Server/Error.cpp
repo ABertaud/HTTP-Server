@@ -65,7 +65,7 @@ ErrorConfigFile::ErrorConfigFile(const std::string& err) : Error(err)
 {
 }
 
-ErrorConfigTag::ErrorConfigTag() : ErrorConfigFile("Error config file: the tag doesn't exist")
+ErrorConfigTag::ErrorConfigTag() : ErrorConfigFile("Error config file: one module name doesn't exist")
 {
 }
 

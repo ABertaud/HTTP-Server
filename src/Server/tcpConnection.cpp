@@ -57,7 +57,7 @@ void tcpConnection::handleRead(const boost::system::error_code& err, size_t byte
         std::string req(_data);
         std::thread reqThread(&requestManager::launchRequest, _reqManager, std::ref(req), std::ref(pList), std::ref(_socket));
         // reqThread.detach();
-        // _reqManager.launchRequest(req, socket);
+        // _reqManager.launchRequest(req, pList, _socket);
         start();
     } else {
         std::cerr << "error: " << err.message() << std::endl;

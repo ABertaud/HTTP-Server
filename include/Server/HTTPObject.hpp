@@ -105,7 +105,7 @@ namespace HTTP {
             std::string toString(void);
             int checkContent(void);
             std::vector<std::string> strToStringVector(const std::string& str, const std::string& delim);
-            void createResponse(const std::string& httpCode, const std::string& body="");
+            HTTP::HTTPObject& createResponse(const std::string& httpCode, const std::string& body="");
             void clear(void);
         private:
             void parseRequest(const std::string& request);

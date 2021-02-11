@@ -10,15 +10,16 @@
 #include "Error.hpp"
 #include "serverCore.hpp"
 #include "pathHandler.hpp"
+#include "HTTPObject.hpp"
 
 int main(int ac, char **av)
 {
-    if (ac < 3) {
-        std::cout << "./zia [configPath] [dirModulesPath]" << std::endl;
-        std::cout << "[configPath]: Path to the JSON configuration file." << std::endl;
-        std::cout << "[dirModulesPath]: Path to the modules directory." << std::endl;
-        return (0);
-    }
+    // if (ac < 3) {
+    //     std::cout << "./zia [configPath] [dirModulesPath]" << std::endl;
+    //     std::cout << "[configPath]: Path to the JSON configuration file." << std::endl;
+    //     std::cout << "[dirModulesPath]: Path to the modules directory." << std::endl;
+    //     return (0);
+    // }
     try
     {
         pathHandler hdl(pathType::REGULAR_FILE);
@@ -59,8 +60,10 @@ int main(int ac, char **av)
     //     return (-1);
     // std::ifstream t(av[1]);
     // std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
-    // HTTP::HTTPObject _obj(str);
+    // HTTP::HTTPObject _obj();
     // _obj.modifyElemContent(HTTP::HEADERS, "Host", "tg");
     // std::cout << _obj.toString() << std::endl;
+    // auto res = _obj.createResponse("200", "<!DOCTYPE html><head><title>Zia </title></head><body><center><h1>HTTP 2OO OK</h1></center></body>").toString();
+    // std::cout << res << std::endl;
     return (0);
 }
