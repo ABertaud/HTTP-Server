@@ -36,7 +36,11 @@ void serverCore::handleAccept(tcpConnection::pointer newConnection, const boost:
 {
     if (!error)
     {
-      newConnection->start();
+        try {
+            newConnection->start();
+        } catch (Error& e) {
+            std::cout << e.what() << std::endl;
+        }
     }
     startAccept();
 }
@@ -46,7 +50,7 @@ void serverCore::start()
     _acceptor.get_io_service().run();
 }
 
-void serverCore::serverEndHandler(const boost::system::error_code&)
+void serverCore::serverEndHandler([[maybe_unused]] const boost::system::error_code& err)
 {
     if (_sigHandler.isInterrupted() == true) {
         std::cerr << "Server's leaving." << std::endl;

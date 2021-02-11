@@ -33,10 +33,13 @@ class tcpConnection : public boost::enable_shared_from_this<tcpConnection> {
         void handleWrite(const boost::system::error_code& /*error*/, size_t /*bytesTransferred*/);
         void handleRead(const boost::system::error_code& err, size_t bytesTransferred);
         void send(const std::string& toSend);
+        void handleConfigUpdate(const boost::system::error_code& err, const std::string& configPath);
         boost::asio::ip::tcp::socket _socket;
         std::string _message;
         requestManager _reqManager;
         configHandler _confHandler;
         char _data[BUFFER_SIZE];
+        std::time_t lastUpdate;
+        boost::asio::steady_timer _t;
 };
 #endif /* !TCPCONNECTION_HPP_ */

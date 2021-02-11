@@ -35,6 +35,9 @@ target_link_libraries(zia ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(zia ${CMAKE_DL_LIBS})
 link_libraries(stdc++fs)
 
+
+add_subdirectory(modules)
+
 if (UNIX)
     include(CTest)
     enable_testing(MAKE_DIRECTORY tests)#

@@ -15,7 +15,7 @@ class IModule {
     public:
     virtual ~IModule() = default;
     virtual void processRequest(HTTP::HTTPObject& req) = 0;
-    virtual moduleType getModuleType()= 0;
+    virtual moduleType getModuleType() const = 0;
     private:
 };
 

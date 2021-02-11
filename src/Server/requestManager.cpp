@@ -56,3 +56,11 @@ bool requestManager::doesModuleExist(const moduleType& type)
             return (true);
     return (false);
 }
+
+std::shared_ptr<IModule> &requestManager::getModule(const moduleType& type)
+{
+    for (auto& module : _modules)
+        if (module->getModuleType() == type)
+            return (module);
+    return (_modules.front());
+}

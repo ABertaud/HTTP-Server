@@ -21,12 +21,13 @@ class requestManager {
         requestManager();
         void reload(std::unordered_map<moduleType, std::string>& modulePaths);
         void launchRequest(const std::string& req, processingList& list, boost::asio::ip::tcp::socket& socket);
+        std::shared_ptr<IModule> &getModule(const moduleType& type);
+        bool doesModuleExist(const moduleType& type);
         requestManager(const requestManager& other) = default;
         requestManager& operator=(const requestManager& other) = default;
         ~requestManager() = default;
     private:
         void loadModules(std::unordered_map<moduleType, std::string>& modulePaths);
-        bool doesModuleExist(const moduleType& type);
         std::unordered_map<moduleType, std::shared_ptr<DLLoader>> _loaders;
         std::vector<std::shared_ptr<IModule>> _modules;
 };
