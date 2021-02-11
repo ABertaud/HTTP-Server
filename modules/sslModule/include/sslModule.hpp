@@ -14,6 +14,8 @@ class sslModule : public IModule {
     public:
         sslModule();
         void processRequest(HTTP::HTTPObject& req);
+        void onReceive(const boost::asio::ip::tcp::socket& sock);
+        void onSend(const boost::asio::ip::tcp::socket& sock, const std::string& toSend);
         moduleType getModuleType() const;
         sslModule(const sslModule& other) = default;
         sslModule& operator=(const sslModule& other) = default;

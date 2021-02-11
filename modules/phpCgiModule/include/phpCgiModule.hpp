@@ -14,6 +14,8 @@ class phpCgiModule : public IModule {
     public:
         phpCgiModule();
         void processRequest(HTTP::HTTPObject& req);
+        void onReceive(const boost::asio::ip::tcp::socket& sock);
+        void onSend(const boost::asio::ip::tcp::socket& sock, const std::string& toSend);
         moduleType getModuleType() const;
         phpCgiModule(const phpCgiModule& other) = default;
         phpCgiModule& operator=(const phpCgiModule& other) = default;

@@ -17,6 +17,18 @@ void sslModule::processRequest(HTTP::HTTPObject& req)
     (void)req;
 }
 
+void sslModule::onReceive(const boost::asio::ip::tcp::socket& sock)
+{
+    (void)sock;
+}
+
+void sslModule::onSend(const boost::asio::ip::tcp::socket& sock, const std::string& toSend)
+{
+    (void)sock;
+    (void)toSend;
+}
+
+
 moduleType sslModule::getModuleType() const
 {
     return (moduleType::SSL);

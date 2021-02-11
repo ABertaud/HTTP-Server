@@ -17,6 +17,17 @@ void phpCgiModule::processRequest(HTTP::HTTPObject& req)
     (void)req;
 }
 
+void phpCgiModule::onReceive(const boost::asio::ip::tcp::socket& sock)
+{
+    (void)sock;
+}
+
+void phpCgiModule::onSend(const boost::asio::ip::tcp::socket& sock, const std::string& toSend)
+{
+    (void)sock;
+    (void)toSend;
+}
+
 moduleType phpCgiModule::getModuleType() const
 {
     return (moduleType::PHPCGI);
