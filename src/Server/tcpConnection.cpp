@@ -10,7 +10,7 @@
 #include "Error.hpp"
 #include <iostream>
 
-tcpConnection::tcpConnection(boost::asio::io_context& ioContext, const configPaths& paths) : _socket(ioContext), _confHandler(paths), _t(ioContext, boost::asio::chrono::seconds(1))
+tcpConnection::tcpConnection(boost::asio::io_context& ioContext, const configPaths& paths) : _socket(ioContext), _confHandler(paths), _t(ioContext, boost::asio::chrono::seconds(5))
 {
     _reqManager.reload(_confHandler.getListModules());
     boost::filesystem::path p(paths.configPath);
@@ -34,6 +34,9 @@ boost::asio::ip::tcp::socket& tcpConnection::getSocket()
 
 void tcpConnection::start()
 {
+    // std::string s = std::to_string(_socket.remote_endpoint().port());
+    // std::string s2 = _socket.remote_endpoint().address().to_string();
+    // std::cout << s  + ", " + s2 << std::endl;
     std::memset(_data, '\0', BUFFER_SIZE);
     if (_reqManager.doesModuleExist(moduleType::SSL)) {
         _reqManager.getModule(moduleType::SSL);
@@ -53,14 +56,15 @@ void tcpConnection::handleRead(const boost::system::error_code& err, size_t byte
 {
     (void)bytesTransferred;
     if (!err) {
+        std::cout << _data << std::endl;
         auto pList = _confHandler.getCopyProcessList();
         std::string req(_data);
         std::thread reqThread(&requestManager::launchRequest, _reqManager, std::ref(req), std::ref(pList), std::ref(_socket));
-        // reqThread.detach();
+        reqThread.join();
         // _reqManager.launchRequest(req, pList, _socket);
         start();
     } else {
-        std::cerr << "error: " << err.message() << std::endl;
+        // std::cerr << "error: " << err.message() << "kk" << std::endl;
         _socket.close();
     }
 }
@@ -79,6 +83,7 @@ void tcpConnection::handleConfigUpdate(const boost::system::error_code& err, con
             _reqManager.reload(_confHandler.getListModules());
             lastUpdate = boost::filesystem::last_write_time(p);
         }
+        _t.expires_at(_t.expires_at() + boost::asio::chrono::seconds(5));
         _t.async_wait(boost::bind(&tcpConnection::handleConfigUpdate, this, boost::asio::placeholders::error, configPath));
     } else
         throw ErrorConfigPath();

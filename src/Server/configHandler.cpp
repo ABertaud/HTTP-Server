@@ -23,6 +23,7 @@ _modulePaths(), _paths()
 
 void configHandler::load()
 {
+    _json.loadConfigFile();
     std::string line("");
     std::string name("");
     bool PosModule = false;
@@ -83,7 +84,7 @@ bool configHandler::checktagModule(std::string& line)
 
 void configHandler::addModuleJson(const std::string& name)
 {
-    std::string path = _paths.dirPath + name + ".so";
+    std::string path = _paths.dirPath + "/lib" + name + ".so";
 
     if (_moduleType.find(name) == _moduleType.end()) {
         throw ErrorConfigTag();

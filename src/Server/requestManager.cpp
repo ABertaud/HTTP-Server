@@ -20,15 +20,16 @@ void requestManager::launchRequest(const std::string& req, processingList& list,
 {
     try {
         HTTP::HTTPObject request(req);
-        // moduleType type = list.getCurrentType();
+        moduleType type = list.getCurrentType();
 
-        // while (type != moduleType::NONE) {
-        //     for (auto &mod : _modules)
-        //         if (mod->getModuleType() == type)
-        //             mod->processRequest(request);
-        //     list.remove();
-        //     type = list.getCurrentType();
-        // }
+        while (type != moduleType::NONE) {
+            for (auto &mod : _modules)
+                if (mod->getModuleType() == type) {
+                    mod->processRequest(request);
+                }
+            list.remove();
+            type = list.getCurrentType();
+        }
         std::string body("<!DOCTYPE html><head><title>Zia</title></head><body><center><h1>HTTP 2OO OK</h1></center></body>");
         auto answer = request.createResponse("200", body).toString();
         socket.send(boost::asio::buffer(answer));
@@ -45,8 +46,9 @@ void requestManager::loadModules(std::unordered_map<moduleType, std::string>& mo
             _loaders.insert(std::make_pair(path.first, std::shared_ptr<DLLoader>{new DLLoader(path.second)}));
     }
     for (auto& load : _loaders) {
-        if (doesModuleExist(load.first) == false)
+        if (doesModuleExist(load.first) == false) {
             _modules.push_back(load.second->getInstance<IModule>("entryPoint"));
+        }
     }
 }
 
