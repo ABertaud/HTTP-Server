@@ -258,7 +258,6 @@ namespace HTTP {
             HTTP::paramsMap _httpCodes;
             std::string _httpCode;
             std::string _bodyContent;
-
     };
 }
 

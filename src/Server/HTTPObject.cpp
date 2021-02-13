@@ -13,6 +13,7 @@ try : _type(type), _httpCode("200"), _bodyContent("")
 {
     parseRequest(request);
     checkContent();
+    createHTTPCodesMap();
 
 } catch(const ErrorHTTPObject& e)
 {
@@ -217,15 +218,18 @@ HTTP::HTTPObject& HTTP::HTTPObject::createResponse(bool defaultBody)
     clear();
     strRes = "HTTP/1.1 ";
     strRes += _httpCode+" ";
-    strRes += _httpCodes[_httpCode];
-    // strRes = "HTTP/1.1 200 OK";
+    strRes += getCodeDesc(_httpCode);
     _startLine["Raw"].push_back(strRes);
     _startLine["Version"].push_back("HTTP/1.1");
-    _startLine["Code"].push_back("200");
-    _startLine["Description"].push_back("OK");
+    _startLine["Code"].push_back(_httpCode);
+    _startLine["Description"].push_back(getCodeDesc(_httpCode));
+    _type = HTTP::RES;
     if (defaultBody) {
         std::string defaultHtml1 = "<!DOCTYPE html><head><title>Zia</title></head><body><center><h1>HTTP ";
         defaultHtml1 += _httpCode+" "+_httpCodes[_httpCode]+"</h1></center></body>";
+        _headers["Content-Length"].push_back(std::to_string(defaultHtml1.size()));
+        _headersOrderList.push_back("Content-Length");
+        _body["Body"].push_back(defaultHtml1);
         return (*this);
     }
     if (!_bodyContent.empty()) {
@@ -233,7 +237,6 @@ HTTP::HTTPObject& HTTP::HTTPObject::createResponse(bool defaultBody)
         _headersOrderList.push_back("Content-Length");
         _body["Body"].push_back(_bodyContent);
     }
-    _type = HTTP::RES;
     return (*this);
 }
 
@@ -289,14 +292,14 @@ int HTTP::HTTPObject::checkContent(void)
 
 const std::string HTTP::HTTPObject::getCodeDesc(const std::string& code)
 {
-    if (_httpCodes.count(code) != 0)
-        return;
+    if (_httpCodes.count(code) == 0)
+        return ("UNKOWN");
     return (_httpCodes[code]);
 }
 
 void HTTP::HTTPObject::setHTTPCode(const std::string& newCode)
 {
-    if (_httpCodes.count(newCode) != 0)
+    if (_httpCodes.count(newCode) == 0)
         return;
     _httpCode = newCode;
 }
