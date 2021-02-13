@@ -7,11 +7,9 @@
 
 #include "HTTPObject.hpp"
 #include "Error.hpp"
-// #include <boost/algorithm/string.hpp>
-// #include <boost/algorithm/string/replace.hpp>
 
 HTTP::HTTPObject::HTTPObject(const std::string& request, const HTTP::HTTPType& type)
-try : _type(type)
+try : _type(type), _httpCode("200"), _bodyContent("")
 {
     parseRequest(request);
     checkContent();
@@ -99,8 +97,7 @@ void HTTP::HTTPObject::createParamsMap(const std::string& strParams)
     std::size_t pos = 0;
 
     vec = strToStringVector(strParams, "&");
-    // check if / after the arguments
-    // like this -> param=2&super=cool/roblox
+    // check if '/' after the arguments like this -> param=2&super=cool/roblox
 
     for (size_t i = 0; i != vec.size(); i++) {
         if (!vec.at(i).empty() && (vec.at(i).find("=") != std::string::npos)) {
@@ -125,8 +122,7 @@ void HTTP::HTTPObject::parseTarget(std::string& target)
     std::vector<std::string> vec;
     bool isParams = false;
 
-    // maybe decode the target as it may be encoded and or check
-
+    // maybe decode the target as it may be encoded and CHECK IF VALID
     if ((target.find('?') != std::string::npos)) {
         isParams = true;
         vec = strToStringVector(target, "?");
@@ -201,7 +197,6 @@ void HTTP::HTTPObject::parseHeaders(const std::string& request)
         throw ErrorNoHost();
     header[header.find_last_of('\n')] = '\0';
     _headers["Raw"].push_back(header);
-    // boost::split(strs, header, boost::is_any_of("\n"), boost::token_compress_on);
     strs = strToStringVector(header, "\n");
     for (std::size_t i = 0; i < strs.size(); i++) {
         if (!strs[i].empty()) {
@@ -215,21 +210,28 @@ void HTTP::HTTPObject::parseHeaders(const std::string& request)
     }
 }
 
-HTTP::HTTPObject& HTTP::HTTPObject::createResponse([[maybe_unused]]const std::string& httpCode, const std::string& body)
+HTTP::HTTPObject& HTTP::HTTPObject::createResponse(bool defaultBody)
 {
     std::string strRes;
 
     clear();
-    strRes = "HTTP/1.1 200 OK";
+    strRes = "HTTP/1.1 ";
+    strRes += _httpCode+" ";
+    strRes += _httpCodes[_httpCode];
+    // strRes = "HTTP/1.1 200 OK";
     _startLine["Raw"].push_back(strRes);
     _startLine["Version"].push_back("HTTP/1.1");
     _startLine["Code"].push_back("200");
     _startLine["Description"].push_back("OK");
-
-    if (!body.empty()) {
-        _headers["Content-Length"].push_back(std::to_string(body.size()));
+    if (defaultBody) {
+        std::string defaultHtml1 = "<!DOCTYPE html><head><title>Zia</title></head><body><center><h1>HTTP ";
+        defaultHtml1 += _httpCode+" "+_httpCodes[_httpCode]+"</h1></center></body>";
+        return (*this);
+    }
+    if (!_bodyContent.empty()) {
+        _headers["Content-Length"].push_back(std::to_string(_bodyContent.size()));
         _headersOrderList.push_back("Content-Length");
-        _body["Body"].push_back(body);
+        _body["Body"].push_back(_bodyContent);
     }
     _type = HTTP::RES;
     return (*this);
@@ -283,4 +285,89 @@ int HTTP::HTTPObject::checkContent(void)
     if (contentLength < 0 || contentLength != bodySize)
         throw ErrorContentSize();
     return (0);
+}
+
+const std::string HTTP::HTTPObject::getCodeDesc(const std::string& code)
+{
+    if (_httpCodes.count(code) != 0)
+        return;
+    return (_httpCodes[code]);
+}
+
+void HTTP::HTTPObject::setHTTPCode(const std::string& newCode)
+{
+    if (_httpCodes.count(newCode) != 0)
+        return;
+    _httpCode = newCode;
+}
+
+void HTTP::HTTPObject::setBody(const std::string& newBody)
+{
+    _bodyContent = newBody;
+}
+
+void HTTP::HTTPObject::createHTTPCodesMap(void)
+{
+    /** Success Resonses **/
+    _httpCodes.insert(std::make_pair<std::string, std::string>("200", "OK"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("201", "Created"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("202", "Accepted"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("203", "Non-Authoritative Information"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("204", "No Content"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("205", "Reset Content"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("206", "Partial Content"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("207", "Multi-Status"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("208", "Multi-Status"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("226", "IM Used"));
+    /** Redirect Messages **/
+    _httpCodes.insert(std::make_pair<std::string, std::string>("300", "Multiple Choice"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("301", "Moved Permanently"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("302", "Found"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("303", "See Other"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("304", "Not Modified"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("305", "Use Proxy"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("306", "Temporary Redirect"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("307", "IM Used"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("308", "Permanent Redirect"));
+    /** Error Responses Client-Side **/
+    _httpCodes.insert(std::make_pair<std::string, std::string>("400", "Bad Request"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("401", "Unauthorized"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("402", "Payment Required"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("403", "Forbidden"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("404", "Not Found"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("405", "Method Not Allowed"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("406", "Not Acceptable"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("407", "Proxy Authentification Required"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("408", "Request Timeout"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("409", "Conflict"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("410", "Gone"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("411", "Length Required"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("412", "Precondition Failed"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("413", "Payload Too Large"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("414", "URI Too Long"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("415", "Unsupported Media Type"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("416", "Request Range Not Satisfiable"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("417", "Expectation Failed"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("418", "I'm a teapot"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("421", "Misdirected Request"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("422", "Unprocessable Entity"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("423", "Locked"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("424", "Failed Dependency"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("426", "Upgrade Required"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("428", "Precondition Required"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("429", "Too Many Requests"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("431", "Request Header Fields Too Large"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("451", "Unavailable For Legal Reasons"));
+    /** Error Responses Server-Side **/
+    _httpCodes.insert(std::make_pair<std::string, std::string>("500", "Internal Server Error"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("501", "Not Implemented"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("502", "Bad Gateway"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("503", "Service Unavailable"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("504", "Gateway Timeout"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("505", "HTTP Version Not Supported"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("506", "Variant Also Negotiates"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("507", "Insufficient Storage"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("508", "Loop Detected"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("510", "Not Extended"));
+    _httpCodes.insert(std::make_pair<std::string, std::string>("511", "Network Authentication Required"));
 }

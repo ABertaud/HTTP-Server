@@ -168,9 +168,9 @@ namespace HTTP {
              *  @param body (Optionnal) The body of the res (if needed)
              *  @return HTTPObject Will return the object itself so that it can be chained with another method
              */
-            HTTP::HTTPObject& createResponse(const std::string& httpCode, const std::string& body="");
+            HTTP::HTTPObject& createResponse(bool defaultBody = true);
             /** @brief This function will fill the _params map in the class with the params in the strParams
-             *  @param strParams std::string containing the params from the HTTP REQ
+             *  @param defaultBody (Default = true) bool Depending on the value will create a html template body with the http code. Set it to false if you want to use yout own body. 
              *  @return Void
              */
             void createParamsMap(const std::string& strParams);
@@ -180,6 +180,25 @@ namespace HTTP {
              *  @return std::string The value corresponding to the given param.
              */
             std::string& getParams(const std::string& param);
+            /** @brief THIS WILL BE RELOCATED 
+             * This function will create a map with all the HTTP Codes and their description.
+             * Can be used as: _map.getDesc("200") -> "OK"
+            */
+            void createHTTPCodesMap(void);
+            /** @brief THIS WILL MAYBE BE RELOCATED 
+             * This function will get the description of the given HTTP Code.
+             * @param code std::string corresponding to the code you want the description of. 
+             * Can be used as: _map.getDesc("200") -> "OK"
+            */
+            const std::string getCodeDesc(const std::string& code);
+            /** @brief This function will set the HTTPObject HTTP code to the one given in argument.
+             * @param code std::string corresponding to the code.
+            */
+            void setHTTPCode(const std::string& newCode);
+            /** @brief This function will set the HTTPObject body to the one given in argument.
+             * @param code std::string corresponding to the body.
+            */
+            void setBody(const std::string& newBody);
         private:
             /** @brief This function will clear all keys and their content in all the unordered_maps (STARTLINE, HEADERS, BODY)
              *  @return Void
@@ -235,6 +254,11 @@ namespace HTTP {
              *         Can be used like: _obj.getParam("Age") -> "13"
              */
             HTTP::paramsMap _params;
+            /** @brief THIS WILL BE RELOCATED */
+            HTTP::paramsMap _httpCodes;
+            std::string _httpCode;
+            std::string _bodyContent;
+
     };
 }
 
