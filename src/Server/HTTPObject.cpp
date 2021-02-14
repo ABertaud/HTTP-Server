@@ -88,6 +88,10 @@ void HTTP::HTTPObject::parseRequest(const std::string& request)
     parseStartLine(request);
     parseHeaders(request);
     parseBody(request);
+    if (_startLine["Method"][0].compare("PUT") == 0 || _startLine["Method"][0].compare("PUT") == 0) {
+        _params.clear();
+        createParamsMap(_body["Body"][0]);
+    }
 }
 
 void HTTP::HTTPObject::createParamsMap(const std::string& strParams)
@@ -110,12 +114,13 @@ void HTTP::HTTPObject::createParamsMap(const std::string& strParams)
     }
 }
 
-std::string& HTTP::HTTPObject::getParams(const std::string& param)
+HTTP::paramsMap& HTTP::HTTPObject::getParams()
 {
-    if (_params.count(param) != 0)
-        return (_params[param]);
-    else
-        throw ErrorRequestParams("Error: Param was not found");
+    // if (_params.count(param) != 0)
+    //     return (_params[param]);
+    // else
+    //     throw ErrorRequestParams("Error: Param was not found");
+    return (_params);
 }
 
 void HTTP::HTTPObject::parseTarget(std::string& target)

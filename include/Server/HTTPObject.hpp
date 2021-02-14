@@ -179,7 +179,7 @@ namespace HTTP {
              *  @param strParams std::string containing the params from the HTTP REQ
              *  @return std::string The value corresponding to the given param.
              */
-            std::string& getParams(const std::string& param);
+            HTTP::paramsMap& getParams();
             /** @brief THIS WILL BE RELOCATED 
              * This function will create a map with all the HTTP Codes and their description.
              * Can be used as: _map.getDesc("200") -> "OK"

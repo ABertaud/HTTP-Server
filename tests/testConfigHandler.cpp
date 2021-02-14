@@ -13,6 +13,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <filesystem>
+#include <unistd.h>
 
 Test(testPathSoError, configHandler)
 {
@@ -41,6 +42,7 @@ Test(testPathSoError, configHandler)
     catch (Error &e) {
         cr_assert(std::strcmp(e.what(), "Error config file: one module doesn't exist") == 0);
     }
+    sleep(1);
 }
 
 Test(TestTagErr, configHandler)
@@ -70,6 +72,7 @@ Test(TestTagErr, configHandler)
     catch (Error &e) {
         cr_assert(std::strcmp(e.what(), "Error config file: one module name doesn't exist") == 0);
     }
+    sleep(1);
 }
 
 Test(TestAllGood, configHandler)
@@ -88,13 +91,13 @@ Test(TestAllGood, configHandler)
         "}",
         "\0"
     };
-    std::ofstream phpSo ("FileSo/PHP_CGI.so");
+    std::ofstream phpSo ("FileSo/libPHP_CGI.so");
     phpSo.close();
-    std::ofstream sslSo ("FileSo/SSL_TSL.so");
+    std::ofstream sslSo ("FileSo/libSSL_TSL.so");
     sslSo.close();
-    std::ofstream snakeSo ("FileSo/Snake.so");
+    std::ofstream snakeSo ("FileSo/libSnake.so");
     snakeSo.close();
-    std::ofstream serverSo ("FileSo/File_Server.so");
+    std::ofstream serverSo ("FileSo/libFile_Server.so");
     serverSo.close();
     std::ofstream outfile ("test.txt");
     std::unordered_map<moduleType, std::string> modulePaths;
@@ -110,7 +113,9 @@ Test(TestAllGood, configHandler)
     }
     catch (Error &e) {
     }
-    cr_assert_eq(modulePaths[moduleType::PHPCGI], "FileSo/PHP_CGI.so");
+    // std::cout << modulePaths[moduleType::PHPCGI] << std::endl;
+    cr_assert_eq(modulePaths[moduleType::PHPCGI], "FileSo/libPHP_CGI.so");
+    sleep(1);
 }
 
 Test(TestgetModule, configHandler)
@@ -155,6 +160,7 @@ Test(TestgetModule, configHandler)
     }
     catch (Error &e) {
     }
+    sleep(1);
 }
 
 Test(TestgetProcess, configHandler)
@@ -197,4 +203,5 @@ Test(TestgetProcess, configHandler)
     }
     catch (Error &e) {
     }
+    sleep(1);
 }

@@ -10,6 +10,7 @@
 #include "jsonReader.hpp"
 #include "Error.hpp"
 #include <iostream>
+#include <unistd.h>
 
 class OSRedirector {
     private:
@@ -66,6 +67,7 @@ Test(testJsonError, jsonReader)
     } catch (nlohmann::json::exception const &jsonErr) {
         cr_assert(std::strcmp(jsonErr.what(), "[json.exception.parse_error.101] parse error at 146: syntax error - unexpected end of input; expected \'}\'") == 0);
     }
+    sleep(1);
 }
 
 Test(testJsonOutput, jsonReader)
@@ -95,5 +97,5 @@ Test(testJsonOutput, jsonReader)
         cr_assert_eq(oss.getContent(), "{\"zia\":{\"modules\":[\"PHP CGI\",\"SSL/TSL\",\"Snake\",\"File Server\"]}}");
     } catch (nlohmann::json::exception const &jsonErr) {
     }
-    
+    sleep(1);
 }

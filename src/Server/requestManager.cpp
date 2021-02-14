@@ -30,8 +30,8 @@ void requestManager::launchRequest(const std::string& req, processingList& list,
             list.remove();
             type = list.getCurrentType();
         }
-        request.setHTTPCode("200");
-        auto answer = request.createResponse().toString();
+        // request.setHTTPCode("200");
+        auto answer = request.createResponse(false).toString();
         socket.send(boost::asio::buffer(answer));
     } catch (ErrorHTTPObject& e) {
         socket.send(boost::asio::buffer("400 Bad Request Error"));

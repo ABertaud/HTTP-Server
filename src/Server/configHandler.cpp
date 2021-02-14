@@ -84,7 +84,7 @@ bool configHandler::checktagModule(std::string& line)
 
 void configHandler::addModuleJson(const std::string& name)
 {
-    std::string path = _paths.dirPath + "/lib" + name + ".so";
+    std::string path = _paths.dirPath + "lib" + name + ".so";
 
     if (_moduleType.find(name) == _moduleType.end()) {
         throw ErrorConfigTag();

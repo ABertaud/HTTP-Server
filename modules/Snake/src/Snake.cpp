@@ -25,13 +25,11 @@ Snake::Snake(): _snakeCoord(Coord(0, 0)), _eatenApples(0)
 
 void Snake::processRequest(HTTP::HTTPObject& req)
 {
-    if (req[HTTP::STARTLINES]["Target"][1] == "snake") {
-        std::string method = req[HTTP::STARTLINES]["Method"][0];
-        boost::to_upper(method);
-        for (auto& met : _methods)
-            if (met.first == method)
-                (this->*(met.second))(req);
-    }
+    std::string method = req[HTTP::STARTLINES]["Method"][0];
+    boost::to_upper(method);
+    for (auto& met : _methods)
+        if (met.first == method)
+            (this->*(met.second))(req);
 }
 
 void Snake::onReceive(const boost::asio::ip::tcp::socket& sock)
@@ -58,31 +56,97 @@ void Snake::spawnApple()
 
 void Snake::post(HTTP::HTTPObject& req)
 {
-    (void)req;
+    //POST
+    //404 (Not Found)
+    //409 (Conflict)
+    if (req[HTTP::STARTLINES]["Target"].size() < 1)
+        return;
+    if (req[HTTP::STARTLINES]["Target"][1] != "snake")
+        return;
+    req.setHTTPCode("200");
 }
 
 void Snake::remove(HTTP::HTTPObject& req)
 {
-    (void)req;
+    //DELETE
+    //200 (OK)
+    //404 (Not Found), if ID not found or invalid.
+    if (req[HTTP::STARTLINES]["Target"].size() < 1)
+        return;
+    if (req[HTTP::STARTLINES]["Target"][1] != "snake")
+        return;
+    req.setHTTPCode("200");
 }
 
 void Snake::put(HTTP::HTTPObject& req)
 {
-    (void)req;
+    //PUT
+    //200 (OK)
+    //204 (No Content).
+    //404 (Not Found), if ID not found or invalid.
+    bool valid = false;
+
+    if (req[HTTP::STARTLINES]["Target"].size() < 1)
+        return;
+    if (req[HTTP::STARTLINES]["Target"][1] != "snake")
+        return;
+    auto& params = req.getParams();
+    if (params.size() == 0) {
+        req.setHTTPCode("204");
+        return;
+    }
+    if (params.find("arrow") != params.end()) {
+        auto& param = params["arrow"];
+        boost::to_upper(param);
+        for (auto& move : _movements)
+            if (move.first == param) {
+                valid = true;
+                _snakeCoord += move.second;
+            }
+        if (_snakeCoord == _appleCoord) {
+            _eatenApples += 1;
+            spawnApple();
+        }
+        // std::cout << "x: " + std::to_string(_snakeCoord.x) + ", y: " + std::to_string(_snakeCoord.y) + ", apple_x: " + std::to_string(_appleCoord.x) + ", apple_y: " + std::to_string(_appleCoord.y) << std::endl;
+        req.setHTTPCode("200");
+    } else
+        req.setHTTPCode("404");
 }
 
 void Snake::get(HTTP::HTTPObject& req)
 {
-    std::string param = req.getParams("arrow");
-    boost::to_upper(param);
-    for (auto& move : _movements)
-        if (move.first == param)
-            _snakeCoord += move.second;
-    if (_snakeCoord == _appleCoord) {
-        _eatenApples += 1;
-        spawnApple();
-    }
-    std::cout << "x: " + std::to_string(_snakeCoord.x) + ", y: " + std::to_string(_snakeCoord.y) + ", apple_x: " + std::to_string(_appleCoord.x) + ", apple_y: " + std::to_string(_appleCoord.y) << std::endl;
+    //GET
+    //200 (OK),
+    //404 (Not Found), if ID not found or invalid.
+    if (req[HTTP::STARTLINES]["Target"].size() < 1)
+        return;
+    if (req[HTTP::STARTLINES]["Target"][1] != "snake")
+        return;
+    std::string startBody("<!DOCTYPE html><head><title>Zia</title></head><body>");
+    std::string jumpOfLine("<br>");
+    std::string snakeCoordHtml("<center><h1>Snake Position: x: " + std::to_string(_snakeCoord.x) + ", y: " + std::to_string(_snakeCoord.y) +"</h1></center>");
+    std::string appleCoordHtml("<center><h1>Apple Position: x: " + std::to_string(_appleCoord.x) + ", y: " + std::to_string(_appleCoord.y) +"</h1></center>");
+    std::string nbAppleHtml("<center><h1>Number of eaten apples : " + std::to_string(_eatenApples) +"</h1></center>");
+    std::string endBody("</body>");
+    std::string body(startBody + snakeCoordHtml + jumpOfLine + appleCoordHtml + jumpOfLine + nbAppleHtml + endBody);
+
+    req.setHTTPCode("200");
+    req.setBody(body);
+}
+
+Coord Snake::getSnakePos() const
+{
+    return (_snakeCoord);
+}
+
+Coord Snake::getApplePos() const
+{
+    return (_appleCoord);
+}
+
+unsigned int Snake::getEatenApples() const
+{
+    return (_eatenApples);
 }
 
 #if defined (_WIN32)

@@ -17,6 +17,9 @@ class Snake : public IModule {
         void processRequest(HTTP::HTTPObject& req);
         void onReceive(const boost::asio::ip::tcp::socket& sock);
         void onSend(const boost::asio::ip::tcp::socket& sock, const std::string& toSend);
+        Coord getSnakePos() const;
+        Coord getApplePos() const;
+        unsigned int getEatenApples() const;
         moduleType getModuleType() const;
         Snake(const Snake& other) = default;
         Snake& operator=(const Snake& other) = default;
