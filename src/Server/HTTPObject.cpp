@@ -309,6 +309,11 @@ void HTTP::HTTPObject::setBody(const std::string& newBody)
     _bodyContent = newBody;
 }
 
+const std::string& HTTP::HTTPObject::getHTTPCode(void) const
+{
+    return (_httpCode);
+}
+
 void HTTP::HTTPObject::createHTTPCodesMap(void)
 {
     /** Success Resonses **/

@@ -192,13 +192,15 @@ namespace HTTP {
             */
             const std::string getCodeDesc(const std::string& code);
             /** @brief This function will set the HTTPObject HTTP code to the one given in argument.
-             * @param code std::string corresponding to the code.
+             *  @param code std::string corresponding to the code.
             */
             void setHTTPCode(const std::string& newCode);
             /** @brief This function will set the HTTPObject body to the one given in argument.
-             * @param code std::string corresponding to the body.
+             *  @param code std::string corresponding to the body.
             */
             void setBody(const std::string& newBody);
+            /** @brief This function will get the _httpCode variable */
+            const std::string& getHTTPCode(void) const;
         private:
             /** @brief This function will clear all keys and their content in all the unordered_maps (STARTLINE, HEADERS, BODY)
              *  @return Void
