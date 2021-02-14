@@ -9,7 +9,7 @@
 #include "Error.hpp"
 
 HTTP::HTTPObject::HTTPObject(const std::string& request, const HTTP::HTTPType& type)
-try : _type(type), _httpCode("200"), _bodyContent("")
+try : _type(type), _httpCode("UNKNOWN"), _bodyContent("")
 {
     parseRequest(request);
     checkContent();
