@@ -20,5 +20,9 @@ set(SRCS_SERVER ${SRCS_SERVER_DIR}/Error.cpp
 set(SRCS ${SRCS_DIR}/sslModule.cpp
 )
 
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
+
 # Create shared library
 add_library(sslModule SHARED ${SRCS} ${SRCS_SERVER})
+target_link_libraries(sslModule ${CONAN_LIBS})
