@@ -31,7 +31,7 @@ void sslModule::onSend(const boost::asio::ip::tcp::socket& sock, const std::stri
 
 moduleType sslModule::getModuleType() const
 {
-    return (moduleType::SSL);
+    return (moduleType::SSL_MODULE);
 }
 
 #if defined (_WIN32)

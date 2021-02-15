@@ -14,9 +14,9 @@ Test(processSimpleAdd, processingList)
     processingList processList;
 
     processList.add(moduleType::PHPCGI);
-    processList.add(moduleType::SSL);
+    processList.add(moduleType::SSL_MODULE);
 
-    cr_assert_eq(processList.getCurrentType(), moduleType::SSL);
+    cr_assert_eq(processList.getCurrentType(), moduleType::SSL_MODULE);
 }
 
 Test(processRemoveAdd, processingList)
@@ -24,9 +24,9 @@ Test(processRemoveAdd, processingList)
     processingList processList;
 
     processList.add(moduleType::PHPCGI);
-    processList.add(moduleType::SSL);
+    processList.add(moduleType::SSL_MODULE);
 
-    cr_assert_eq(processList.getCurrentType(), moduleType::SSL);
+    cr_assert_eq(processList.getCurrentType(), moduleType::SSL_MODULE);
     processList.remove();
     cr_assert_eq(processList.getCurrentType(), moduleType::PHPCGI);
 }
@@ -37,10 +37,10 @@ Test(processAddAtPos, processingList)
 
     processList.add(moduleType::PHPCGI);
     processList.add(moduleType::PHPCGI);
-    processList.add(moduleType::SSL, 1);
+    processList.add(moduleType::SSL_MODULE, 1);
 
     processList.remove();
-    cr_assert_eq(processList.getCurrentType(), moduleType::SSL);
+    cr_assert_eq(processList.getCurrentType(), moduleType::SSL_MODULE);
 }
 
 Test(processRemoveAtPos, processingList)
@@ -49,7 +49,7 @@ Test(processRemoveAtPos, processingList)
 
     processList.add(moduleType::PHPCGI);
     processList.add(moduleType::PHPCGI);
-    processList.add(moduleType::SSL, 1);
+    processList.add(moduleType::SSL_MODULE, 1);
 
     processList.remove(1);
     processList.remove();
@@ -62,11 +62,11 @@ Test(processAddHigher, processingList)
 
     processList.add(moduleType::PHPCGI);
     processList.add(moduleType::PHPCGI);
-    processList.add(moduleType::SSL, 3);
+    processList.add(moduleType::SSL_MODULE, 3);
 
     processList.remove();
     processList.remove();
-    cr_assert_eq(processList.getCurrentType(), moduleType::SSL);
+    cr_assert_eq(processList.getCurrentType(), moduleType::SSL_MODULE);
 }
 
 Test(processRemoveHigher, processingList)

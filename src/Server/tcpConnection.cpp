@@ -38,8 +38,8 @@ void tcpConnection::start()
     // std::string s2 = _socket.remote_endpoint().address().to_string();
     // std::cout << s  + ", " + s2 << std::endl;
     std::memset(_data, '\0', BUFFER_SIZE);
-    if (_reqManager.doesModuleExist(moduleType::SSL)) {
-        _reqManager.getModule(moduleType::SSL);
+    if (_reqManager.doesModuleExist(moduleType::SSL_MODULE)) {
+        _reqManager.getModule(moduleType::SSL_MODULE);
     } else {
         _socket.async_read_some(boost::asio::buffer(_data, BUFFER_SIZE),
         boost::bind(&tcpConnection::handleRead, shared_from_this(),

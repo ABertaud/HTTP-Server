@@ -9,6 +9,7 @@
 #define SSLMODULE_HPP_
 
 #include "IModule.hpp"
+#include <boost/asio/ssl.hpp>
 
 class sslModule : public IModule {
     public:
