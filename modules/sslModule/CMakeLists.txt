@@ -23,3 +23,4 @@ set(SRCS ${SRCS_DIR}/sslModule.cpp
 
 # Create shared library
 add_library(sslModule SHARED ${SRCS} ${SRCS_SERVER})
+target_link_libraries(sslModule ssl crypto)

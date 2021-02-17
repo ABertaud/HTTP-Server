@@ -1,7 +1,0 @@
-{
-    "zia": {
-        "modules": [
-            "libphpCgiModule"
-        ]
-    }
-}

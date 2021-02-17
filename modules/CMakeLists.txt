@@ -3,4 +3,4 @@ project(modules)
 
 add_subdirectory(phpCgiModule)
 add_subdirectory(sslModule)
-add_subdirectory(Snake)
+add_subdirectory(snakeModule)

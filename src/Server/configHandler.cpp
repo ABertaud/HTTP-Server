@@ -78,7 +78,7 @@ void configHandler::load()
             checkTag(line);
             if (line.find("\"") != std::string::npos) {
                 if (PosModule == true) {
-                    name = getname(line);
+                    name = getName(line);
                     addModuleJson(name);
                 }
                 if (checktagModule(line) == true)
@@ -113,7 +113,7 @@ std::unordered_map<moduleType, std::string>& configHandler::getListModules()
     return _modulePaths;
 }
 
-std::string configHandler::getname(std::string line)
+std::string configHandler::getName(std::string line)
 {
     std::string name = "";
     size_t found = line.find("\"");
@@ -128,7 +128,7 @@ std::string configHandler::getname(std::string line)
 
 bool configHandler::checktagModule(std::string& line)
 {
-    std::string tag = getname(line);
+    std::string tag = getName(line);
     size_t pos = line.find("[");
     
     if (tag == "modules" && pos != std::string::npos)
@@ -139,7 +139,7 @@ bool configHandler::checktagModule(std::string& line)
 
 void configHandler::addModuleJson(const std::string& name)
 {
-    std::string path = _paths.dirPath + name + ".so";
+    std::string path = _paths.dirPath + "lib" + name + ".so";
 
     if (_moduleType.find(name) == _moduleType.end()) {
         throw ErrorConfigTag();

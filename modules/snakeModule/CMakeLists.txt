@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(Snake)
+project(snakeModule)
 
 set(SRCS_DIR ${PROJECT_SOURCE_DIR}/src)
 
@@ -22,4 +22,4 @@ set(SRCS ${SRCS_DIR}/Snake.cpp
 )
 
 # Create shared library
-add_library(Snake SHARED ${SRCS} ${SRCS_SERVER})
+add_library(snakeModule SHARED ${SRCS} ${SRCS_SERVER})

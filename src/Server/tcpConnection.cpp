@@ -14,6 +14,10 @@ tcpConnection::tcpConnection(boost::asio::io_context& ioContext, const configPat
 {
     _reqManager.reload(_confHandler.getListModules());
     boost::filesystem::path p(paths.configPath);
+    if (_reqManager.doesModuleExist(moduleType::PHPCGI))
+        _reqManager.getModule(moduleType::PHPCGI)->init(_confHandler.getCgiPath(), _socket);
+    if (_reqManager.doesModuleExist(moduleType::SSL_MODULE))
+        _reqManager.getModule(moduleType::SSL_MODULE)->init(_confHandler.getCertificatePath(), _socket);
     if (boost::filesystem::exists(p)) {
         lastUpdate = boost::filesystem::last_write_time(p);
         _t.async_wait(boost::bind(&tcpConnection::handleConfigUpdate, this, boost::asio::placeholders::error, paths.configPath));
@@ -38,13 +42,9 @@ void tcpConnection::start()
     // std::string s2 = _socket.remote_endpoint().address().to_string();
     // std::cout << s  + ", " + s2 << std::endl;
     std::memset(_data, '\0', BUFFER_SIZE);
-    if (_reqManager.doesModuleExist(moduleType::SSL_MODULE)) {
-        _reqManager.getModule(moduleType::SSL_MODULE);
-    } else {
-        _socket.async_read_some(boost::asio::buffer(_data, BUFFER_SIZE),
-        boost::bind(&tcpConnection::handleRead, shared_from_this(),
-        boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
-    }
+    _socket.async_read_some(boost::asio::buffer(_data, BUFFER_SIZE),
+    boost::bind(&tcpConnection::handleRead, shared_from_this(),
+    boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
 }
 
 void tcpConnection::handleWrite(const boost::system::error_code& /*error*/, size_t /*bytesTransferred*/)
@@ -81,6 +81,10 @@ void tcpConnection::handleConfigUpdate(const boost::system::error_code& err, con
         if (lastUpdate != boost::filesystem::last_write_time(p)) {
             _confHandler.reload();
             _reqManager.reload(_confHandler.getListModules());
+            if (_reqManager.doesModuleExist(moduleType::PHPCGI))
+                _reqManager.getModule(moduleType::PHPCGI)->init(_confHandler.getCgiPath(), _socket);
+            if (_reqManager.doesModuleExist(moduleType::SSL_MODULE))
+                _reqManager.getModule(moduleType::SSL_MODULE)->init(_confHandler.getCertificatePath(), _socket);
             lastUpdate = boost::filesystem::last_write_time(p);
         }
         _t.expires_at(_t.expires_at() + boost::asio::chrono::seconds(5));

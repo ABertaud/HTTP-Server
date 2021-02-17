@@ -34,15 +34,15 @@ class configHandler
         std::string _certificatePath;
         std::string _CgiDir;
         const std::map<std::string, moduleType> _moduleType {
-        {"libphpCgiModule", PHPCGI},
-        {"SSL_TSL", SSL_MODULE},
-        {"Snake", SNAKE},
+        {"phpCgiModule", PHPCGI},
+        {"sslModule", SSL_MODULE},
+        {"snakeModule", SNAKE},
         {"File_Server", FILE_SERVER},
         };
         void load();
         void addModuleJson(const std::string& name);
         bool checktagModule(std::string& line);
-        std::string getname(std::string line);
+        std::string getName(std::string line);
         void fileExists(const std::filesystem::path& p);
         void checkTag(std::string line);
 
