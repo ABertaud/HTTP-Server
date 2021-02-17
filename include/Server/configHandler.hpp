@@ -17,6 +17,7 @@
 #include "Error.hpp"
 #include <fstream>
 #include <map>
+#include <filesystem>
 
 enum ConfigType {
     MODULE
@@ -30,6 +31,8 @@ class configHandler
         jsonReader _json;
         std::unordered_map<moduleType, std::string> _modulePaths;
         configPaths _paths;
+        std::string _certificatePath;
+        std::string _CgiDir;
         const std::map<std::string, moduleType> _moduleType {
         {"libphpCgiModule", PHPCGI},
         {"SSL_TSL", SSL_MODULE},
@@ -40,12 +43,16 @@ class configHandler
         void addModuleJson(const std::string& name);
         bool checktagModule(std::string& line);
         std::string getname(std::string line);
+        void fileExists(const std::filesystem::path& p);
+        void checkTag(std::string line);
 
     public:
         configHandler(const configPaths& paths);
         configHandler(const configHandler& other) = default;
         configHandler& operator=(const configHandler& other) = default;
         void reload();
+        std::string getCgiPath()const;
+        std::string getCertificatePath()const;
         processingList getCopyProcessList();
         std::unordered_map<moduleType, std::string>& getListModules();
         ~configHandler() = default;

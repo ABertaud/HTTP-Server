@@ -76,3 +76,7 @@ ErrorConfigTag::ErrorConfigTag() : ErrorConfigFile("Error config file: one modul
 ErrorConfigSo::ErrorConfigSo() : ErrorConfigFile("Error config file: one module doesn't exist")
 {
 }
+
+ErrorConfigPhpFile::ErrorConfigPhpFile() : ErrorConfigFile("Error config file: the config folder is not correct")
+{
+}

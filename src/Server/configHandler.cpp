@@ -9,7 +9,7 @@
 #include <iostream>
 
 configHandler::configHandler(const configPaths& paths) try : _fileErr(), _processList(), _json(paths.configPath), \
-_modulePaths(), _paths()
+_modulePaths(), _paths(), _certificatePath(), _CgiDir()
 {
     std::string pathDirclean;
     _fileErr.open(paths.configPath);
@@ -27,6 +27,43 @@ _modulePaths(), _paths()
     throw err;
 }
 
+void configHandler::fileExists(const std::filesystem::path& p)
+{
+    std::filesystem::file_status s = std::filesystem::file_status{};
+    if(std::filesystem::status_known(s) ? std::filesystem::exists(s) : std::filesystem::exists(p))
+        return;
+    else
+        throw ErrorConfigPhpFile();
+}
+
+void configHandler::checkTag(std::string line)
+{
+    std::string tag = line;
+    std::string path = line;
+    std::size_t found = line.find("\"");
+    std::size_t foundLast = line.find("\"", found+1);
+    std::size_t foundPath = line.find("\"", foundLast+1);
+    std::size_t foundPath_s = line.find("\"", foundPath+1);
+        
+    if (found == std::string::npos || foundLast == std::string::npos || foundPath == std::string::npos || foundPath_s == std::string::npos)
+        return;
+    foundLast -= found;
+    found++;
+    foundLast--;
+    foundPath_s -= foundPath;
+    foundPath++;
+    foundPath_s--;
+    tag = tag.substr(found, foundLast);
+    path = path.substr(foundPath, foundPath_s);
+    if (tag == "SSL Certificate Path") {
+        _certificatePath = path;
+        fileExists(_certificatePath);
+    } else if (tag == "CGI Dir Path") {
+        _CgiDir = path;
+        fileExists(_CgiDir);
+    }
+}
+
 void configHandler::load()
 {
     _json.loadConfigFile();
@@ -38,6 +75,7 @@ void configHandler::load()
 
     try {
         while (std::getline(jsonFile, line, '\n')) {
+            checkTag(line);
             if (line.find("\"") != std::string::npos) {
                 if (PosModule == true) {
                     name = getname(line);
@@ -55,6 +93,16 @@ void configHandler::load()
     }
 }
 
+std::string configHandler::getCgiPath()const
+{
+    return _CgiDir;
+}
+
+std::string configHandler::getCertificatePath()const
+{
+    return _certificatePath;
+}
+
 processingList configHandler::getCopyProcessList()
 {
     return _processList;
@@ -69,7 +117,7 @@ std::string configHandler::getname(std::string line)
 {
     std::string name = "";
     size_t found = line.find("\"");
-    std::size_t foundLast = line.find_last_of("\"");
+    std::size_t foundLast = line.find("\"", found+1);
 
     foundLast -= found;
     found++;
@@ -88,6 +136,7 @@ bool configHandler::checktagModule(std::string& line)
     return false;
 }
 
+
 void configHandler::addModuleJson(const std::string& name)
 {
     std::string path = _paths.dirPath + name + ".so";
@@ -96,7 +145,6 @@ void configHandler::addModuleJson(const std::string& name)
         throw ErrorConfigTag();
         return;
     }
-    std::cout << path << std::endl;
     std::ifstream infile(path);
     if (infile.good() == false) {
         throw ErrorConfigSo();
