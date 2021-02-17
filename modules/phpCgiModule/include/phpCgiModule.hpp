@@ -9,6 +9,8 @@
 #define PHPCGIMODULE_HPP_
 
 #include "IModule.hpp"
+#include <fstream>
+
 
 class phpCgiModule : public IModule {
     public:
@@ -20,8 +22,13 @@ class phpCgiModule : public IModule {
         phpCgiModule(const phpCgiModule& other) = default;
         phpCgiModule& operator=(const phpCgiModule& other) = default;
         ~phpCgiModule() = default;
+        void init(const std::string& path, boost::asio::ip::tcp::socket& sock);
     protected:
     private:
+        std::string exec(const std::string& cmd);
+        std::unordered_map<std::string, void (phpCgiModule::*)(HTTP::HTTPObject& req)> _methods;
+        void helloWorld(HTTP::HTTPObject& req);
+        
 };
 
 

@@ -21,7 +21,7 @@ Test(testPathSoError, configHandler)
         "{\n",
         "    \"zia\": {\n",
         "        \"modules\": [\n",
-        "            \"PHP_CGI\",\n",
+        "            \"libphpCgiModule\",\n",
         "            \"SSL_TSL\",\n",
         "            \"Snake\",\n",
         "            \"File_Server\"\n",
@@ -82,7 +82,7 @@ Test(TestAllGood, configHandler)
         "{\n",
         "    \"zia\": {\n",
         "        \"modules\": [\n",
-        "            \"PHP_CGI\",\n",
+        "            \"libphpCgiModule\",\n",
         "            \"SSL_TSL\",\n",
         "            \"Snake\",\n",
         "            \"File_Server\"\n",
@@ -91,7 +91,7 @@ Test(TestAllGood, configHandler)
         "}",
         "\0"
     };
-    std::ofstream phpSo ("FileSo/libPHP_CGI.so");
+    std::ofstream phpSo ("FileSo/libphpCgiModule.so");
     phpSo.close();
     std::ofstream sslSo ("FileSo/libSSL_TSL.so");
     sslSo.close();
@@ -114,7 +114,7 @@ Test(TestAllGood, configHandler)
     catch (Error &e) {
     }
     // std::cout << modulePaths[moduleType::PHPCGI] << std::endl;
-    cr_assert_eq(modulePaths[moduleType::PHPCGI], "FileSo/libPHP_CGI.so");
+    cr_assert_eq(modulePaths[moduleType::PHPCGI], "FileSo/libphpCgiModule.so");
     sleep(1);
 }
 
@@ -126,7 +126,7 @@ Test(TestgetModule, configHandler)
         "{\n",
         "    \"zia\": {\n",
         "        \"modules\": [\n",
-        "            \"PHP_CGI\",\n",
+        "            \"libphpCgiModule\",\n",
         "            \"SSL_TSL\",\n",
         "            \"Snake\",\n",
         "            \"File_Server\"\n",
@@ -171,7 +171,7 @@ Test(TestgetProcess, configHandler)
         "{\n",
         "    \"zia\": {\n",
         "        \"modules\": [\n",
-        "            \"PHP_CGI\",\n",
+        "            \"libphpCgiModule\",\n",
         "            \"SSL_TSL\",\n",
         "            \"Snake\",\n",
         "            \"File_Server\"\n",

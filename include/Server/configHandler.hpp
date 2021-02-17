@@ -31,7 +31,7 @@ class configHandler
         std::unordered_map<moduleType, std::string> _modulePaths;
         configPaths _paths;
         const std::map<std::string, moduleType> _moduleType {
-        {"PHP_CGI", PHPCGI},
+        {"libphpCgiModule", PHPCGI},
         {"SSL_TSL", SSL_MODULE},
         {"Snake", SNAKE},
         {"File_Server", FILE_SERVER},

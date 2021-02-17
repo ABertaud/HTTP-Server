@@ -11,11 +11,17 @@
 configHandler::configHandler(const configPaths& paths) try : _fileErr(), _processList(), _json(paths.configPath), \
 _modulePaths(), _paths()
 {
+    std::string pathDirclean;
     _fileErr.open(paths.configPath);
     if (!_fileErr)
         throw ErrorConfigPath();
+    size_t found = paths.dirPath.find_last_of("/");
+    if (found == std::string::npos) {
+        pathDirclean = paths.dirPath + "/";
+        _paths.dirPath = pathDirclean;
+    } else
+        _paths.dirPath = paths.dirPath;    
     _paths.configPath = paths.configPath;
-    _paths.dirPath = paths.dirPath;
     load();
 } catch (Error const &err) {
     throw err;
@@ -84,12 +90,13 @@ bool configHandler::checktagModule(std::string& line)
 
 void configHandler::addModuleJson(const std::string& name)
 {
-    std::string path = _paths.dirPath + "lib" + name + ".so";
+    std::string path = _paths.dirPath + name + ".so";
 
     if (_moduleType.find(name) == _moduleType.end()) {
         throw ErrorConfigTag();
         return;
     }
+    std::cout << path << std::endl;
     std::ifstream infile(path);
     if (infile.good() == false) {
         throw ErrorConfigSo();
