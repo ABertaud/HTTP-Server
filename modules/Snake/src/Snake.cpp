@@ -32,6 +32,12 @@ void Snake::processRequest(HTTP::HTTPObject& req)
             (this->*(met.second))(req);
 }
 
+void Snake::init(const std::string& path, boost::asio::ip::tcp::socket& sock)
+{
+    (void)path;
+    (void)sock;
+}
+
 void Snake::onReceive(const boost::asio::ip::tcp::socket& sock)
 {
     (void)sock;

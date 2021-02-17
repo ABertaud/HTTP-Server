@@ -45,5 +45,5 @@ Test(testDefaultFilePath, pathHandler)
 {
     pathHandler hdl(pathType::REGULAR_FILE);
 
-    cr_assert_eq(strcmp(hdl.getPath().c_str(), "../jsonFiles/config.json"), 0);
+    cr_assert_eq(strcmp(hdl.getPath().c_str(), "../config/config.json"), 0);
 }

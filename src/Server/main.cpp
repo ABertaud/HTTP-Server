@@ -11,15 +11,17 @@
 #include "serverCore.hpp"
 #include "pathHandler.hpp"
 #include "HTTPObject.hpp"
+#include <openssl/ssl.h>
+#include <boost/asio/ssl.hpp>
 
 int main(int ac, char **av)
 {
-    // if (ac < 3) {
-    //     std::cout << "./zia [configPath] [dirModulesPath]" << std::endl;
-    //     std::cout << "[configPath]: Path to the JSON configuration file." << std::endl;
-    //     std::cout << "[dirModulesPath]: Path to the modules directory." << std::endl;
-    //     return (0);
-    // }
+    if (ac < 3) {
+        std::cout << "./zia [configPath] [dirModulesPath]" << std::endl;
+        std::cout << "[configPath]: Path to the JSON configuration file." << std::endl;
+        std::cout << "[dirModulesPath]: Path to the modules directory." << std::endl;
+        return (0);
+    }
     try
     {
         pathHandler hdl(pathType::REGULAR_FILE);
@@ -48,7 +50,7 @@ int main(int ac, char **av)
         return (84);
     }
 
-    // std::string filename = "../jsonFiles/config.json";
+    // std::string filename = "../config/config.json";
     // try {
     //     jsonReader reader(filename);
     //     std::cout << reader.getJsonFile();

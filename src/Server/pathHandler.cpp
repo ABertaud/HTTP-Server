@@ -11,7 +11,7 @@
 pathHandler::pathHandler(const pathType& type)
 {
     if (type == pathType::REGULAR_FILE)
-        _path = "../jsonFiles/config.json";
+        _path = "../config/config.json";
     else
         _path = "./lib/";
 }
