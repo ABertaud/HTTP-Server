@@ -1,0 +1,7 @@
+{
+    "zia": {
+        "modules": [
+        ],
+        "SSL Certificate Path": "./config/SSL/mycert.pem"
+    }
+}
