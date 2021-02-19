@@ -45,6 +45,7 @@ class configHandler
         std::string getName(std::string line);
         void fileExists(const std::filesystem::path& p);
         void checkTag(std::string line);
+        int nthOccurrence(const std::string& str, const std::string& findMe, int nth);
 
     public:
         configHandler(const configPaths& paths);

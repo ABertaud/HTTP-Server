@@ -7,6 +7,7 @@ set(SRCS_SERVER_DIR ${PROJECT_SOURCE_DIR}/src/Server)
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 find_package(Threads)
+link_libraries(stdc++fs)
 
 # -------------------------------- SERVER SOURCES -------------------------------- #
 set(SRCS_SERVER ${SRCS_SERVER_DIR}/main.cpp
@@ -32,7 +33,6 @@ target_include_directories(zia PRIVATE SYSTEM ${INCLUDES_SERVER_DIR})
 target_link_libraries(zia ${CONAN_LIBS})
 target_link_libraries(zia ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(zia ${CMAKE_DL_LIBS})
-link_libraries(stdc++fs)
 
 
 add_subdirectory(modules)

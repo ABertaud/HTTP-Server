@@ -6,21 +6,77 @@
 */
 
 #include "phpCgiModule.hpp"
-#include <memory>
+#include <algorithm>
+#include <deque>
 
-phpCgiModule::phpCgiModule()
+phpCgiModule::phpCgiModule() : _path()
 {
     _methods.insert(std::make_pair("helloWorld", &phpCgiModule::helloWorld));
+    _methods.insert(std::make_pair("webName", &phpCgiModule::webName));
+
 }
 
 void phpCgiModule::helloWorld(HTTP::HTTPObject& req)
 {
-    (void)req; 
+    std::string pathScript = "php-cgi " + _path + "HelloWorld.php";
+
+    std::string output = exec(pathScript);
+    req.setBody(output);
+}
+
+void phpCgiModule::fillArg(const std::string& arg, HTTP::HTTPObject& req, bool &take, std::vector <std::string>& names)
+{
+    auto params =  req.getParams();
+
+    for (auto it = params.begin(); it != params.end(); ++it) {
+        if (arg == it->first) {
+            if (take == true)
+                names.push_back(it->second);
+            if (it->second == "webName")
+                take = true;
+        } 
+    }
+    
+}
+
+void phpCgiModule::webName(HTTP::HTTPObject& req)
+{
+    std::string pathScript = "php-cgi -f " + _path + "WebName.php ";
+    std::vector <std::string> names;
+    std::string firstName = "prenom=";
+    std::string lastName = "nom=";
+    auto params =  req.getParams();
+    bool take = false;
+    int i = 0;
+    std::vector<std::string> sortMap;
+
+    for (auto it = params.begin(); it != params.end(); ++it)
+        sortMap.push_back(it->first);
+    std::sort(sortMap.begin(), sortMap.end());
+    for (std::vector<std::string>::iterator it_s = sortMap.begin(); it_s != sortMap.end(); ++it_s)
+        fillArg(*it_s, req, take, names);
+    for (std::vector<std::string>::iterator it = names.begin(); it != names.end(); it++) {
+        if (i == 0)
+            firstName += (*it);
+        else if (i == 1)
+            lastName += (*it);
+        i++;
+    }
+    pathScript += firstName + " " + lastName;
+    std::string output = exec(pathScript);
+    req.setBody(output);
 }
 
 void phpCgiModule::processRequest(HTTP::HTTPObject& req)
 {
-    std::string phpFile = req[HTTP::BODY]["Body"][0];
+    auto params =  req.getParams();
+    for (auto it = params.begin(); it != params.end(); ++it) {
+        for (auto& met : _methods) {
+            if (met.first == it->second)
+                (this->*(met.second))(req);
+        }
+    }
+    /*std::string phpFile = req[HTTP::BODY]["Body"][0];
     std::ofstream tmpFile ("tmp.php");
 
     tmpFile << phpFile;
@@ -28,12 +84,12 @@ void phpCgiModule::processRequest(HTTP::HTTPObject& req)
     std::string output = exec("php-cgi tmp.php");
     std::cout << "output =" << output <<std::endl;
     std::remove("tmp.php");
-    req.setBody(output);
+    req.setBody(output);*/
 }
 
 void phpCgiModule::init(const std::string& path, boost::asio::ip::tcp::socket& sock) 
 { 
-    (void)path; 
+    _path = path;
     (void)sock;
 }
 

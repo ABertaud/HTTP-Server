@@ -15,12 +15,11 @@ _modulePaths(), _paths(), _certificatePath(), _CgiDir()
     _fileErr.open(paths.configPath);
     if (!_fileErr)
         throw ErrorConfigPath();
-    size_t found = paths.dirPath.find_last_of("/");
-    if (found == std::string::npos) {
+    if (paths.dirPath.back() != '/') {
         pathDirclean = paths.dirPath + "/";
         _paths.dirPath = pathDirclean;
     } else
-        _paths.dirPath = paths.dirPath;    
+        _paths.dirPath = paths.dirPath;  
     _paths.configPath = paths.configPath;
     load();
 } catch (Error const &err) {
@@ -36,25 +35,34 @@ void configHandler::fileExists(const std::filesystem::path& p)
         throw ErrorConfigPhpFile();
 }
 
+int configHandler::nthOccurrence(const std::string& str, const std::string& findMe, int nth)
+{
+    size_t pos = 0;
+    int cnt = 0;
+
+    while(cnt != nth) {
+        pos++;
+        pos = str.find(findMe, pos);
+        if (pos == std::string::npos)
+            return -5;
+        cnt++;
+    }
+    return pos;
+}
+
 void configHandler::checkTag(std::string line)
 {
     std::string tag = line;
     std::string path = line;
-    std::size_t found = line.find("\"");
-    std::size_t foundLast = line.find("\"", found+1);
-    std::size_t foundPath = line.find("\"", foundLast+1);
-    std::size_t foundPath_s = line.find("\"", foundPath+1);
+    int foundTag = nthOccurrence(line, "\"", 1) + 1;
+    int foundTag_s = nthOccurrence(line, "\"", 2) - foundTag;
+    int foundPath = nthOccurrence(line, "\"", 3) + 1;
+    int foundPath_s = nthOccurrence(line, "\"", 4) - foundPath;
         
-    if (found == std::string::npos || foundLast == std::string::npos || foundPath == std::string::npos || foundPath_s == std::string::npos)
+    if (foundTag < 0 || foundTag_s < 0 || foundPath < 0 || foundPath_s < 0)
         return;
-    foundLast -= found;
-    found++;
-    foundLast--;
-    foundPath_s -= foundPath;
-    foundPath++;
-    foundPath_s--;
-    tag = tag.substr(found, foundLast);
-    path = path.substr(foundPath, foundPath_s);
+    tag = tag.substr((size_t)foundTag, (size_t)foundTag_s);
+    path = path.substr((size_t)foundPath, (size_t)foundPath_s);
     if (tag == "SSL Certificate Path") {
         _certificatePath = path;
         fileExists(_certificatePath);
