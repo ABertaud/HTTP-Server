@@ -19,7 +19,7 @@ tcpConnection::tcpConnection(boost::asio::io_context& ioContext, const configPat
     if (_reqManager.doesModuleExist(moduleType::SSL_MODULE))
         _reqManager.getModule(moduleType::SSL_MODULE)->init(_confHandler.getCertificatePath(), _socket);
     if (boost::filesystem::exists(p)) {
-        lastUpdate = boost::filesystem::last_write_time(p);
+        _lastUpdate = boost::filesystem::last_write_time(p);
         _t.async_wait(boost::bind(&tcpConnection::handleConfigUpdate, this, boost::asio::placeholders::error, paths.configPath));
     } else
         throw ErrorConfigPath();
@@ -66,6 +66,7 @@ void tcpConnection::handleRead(const boost::system::error_code& err, size_t byte
     } else {
         // std::cerr << "error: " << err.message() << "kk" << std::endl;
         _socket.close();
+        _t.cancel();
     }
 }
 
@@ -76,16 +77,18 @@ void tcpConnection::send(const std::string& toSend)
 
 void tcpConnection::handleConfigUpdate(const boost::system::error_code& err, const std::string& configPath)
 {
+    if (err)
+        return;
     boost::filesystem::path p(configPath);
     if (boost::filesystem::exists(p)) {
-        if (lastUpdate != boost::filesystem::last_write_time(p)) {
+        if (_lastUpdate != boost::filesystem::last_write_time(p)) {
             _confHandler.reload();
             _reqManager.reload(_confHandler.getListModules());
             if (_reqManager.doesModuleExist(moduleType::PHPCGI))
                 _reqManager.getModule(moduleType::PHPCGI)->init(_confHandler.getCgiPath(), _socket);
             if (_reqManager.doesModuleExist(moduleType::SSL_MODULE))
                 _reqManager.getModule(moduleType::SSL_MODULE)->init(_confHandler.getCertificatePath(), _socket);
-            lastUpdate = boost::filesystem::last_write_time(p);
+            _lastUpdate = boost::filesystem::last_write_time(p);
         }
         _t.expires_at(_t.expires_at() + boost::asio::chrono::seconds(5));
         _t.async_wait(boost::bind(&tcpConnection::handleConfigUpdate, this, boost::asio::placeholders::error, configPath));

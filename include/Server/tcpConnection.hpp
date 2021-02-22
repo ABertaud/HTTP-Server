@@ -39,7 +39,7 @@ class tcpConnection : public boost::enable_shared_from_this<tcpConnection> {
         requestManager _reqManager;
         configHandler _confHandler;
         char _data[BUFFER_SIZE];
-        std::time_t lastUpdate;
+        std::time_t _lastUpdate;
         boost::asio::steady_timer _t;
 };
 #endif /* !TCPCONNECTION_HPP_ */

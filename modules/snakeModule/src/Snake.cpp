@@ -124,13 +124,10 @@ void Snake::get(HTTP::HTTPObject& req)
     //GET
     //200 (OK),
     //404 (Not Found), if ID not found or invalid.
-    std::cout << "before target" << std::endl;
     if (req[HTTP::STARTLINES]["Target"].size() < 2)
         return;
-    std::cout << "before snake" << std::endl;
     if (req[HTTP::STARTLINES]["Target"][1] != "snake")
         return;
-    std::cout << "after snake" << std::endl;
     std::string startBody("<!DOCTYPE html><head><title>Zia</title></head><body>");
     std::string jumpOfLine("<br>");
     std::string snakeCoordHtml("<center><h1>Snake Position: x: " + std::to_string(_snakeCoord.x) + ", y: " + std::to_string(_snakeCoord.y) +"</h1></center>");

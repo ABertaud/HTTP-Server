@@ -52,6 +52,8 @@ void serverCore::start()
 
 void serverCore::serverEndHandler([[maybe_unused]] const boost::system::error_code& err)
 {
+    if (err)
+        return;
     if (_sigHandler.isInterrupted() == true) {
         std::cerr << "Server's leaving." << std::endl;
         stop();
