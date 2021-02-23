@@ -32,6 +32,7 @@ class phpCgiModule : public IModule {
         std::unordered_map<std::string, void (phpCgiModule::*)(HTTP::HTTPObject& req)> _methods;
         void helloWorld(HTTP::HTTPObject& req);
         void webName(HTTP::HTTPObject& req);
+        void calendar(HTTP::HTTPObject& req);
 };
 
 

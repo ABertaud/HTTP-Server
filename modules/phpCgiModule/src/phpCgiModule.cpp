@@ -13,12 +13,13 @@ phpCgiModule::phpCgiModule() : _path()
 {
     _methods.insert(std::make_pair("helloWorld", &phpCgiModule::helloWorld));
     _methods.insert(std::make_pair("webName", &phpCgiModule::webName));
+    _methods.insert(std::make_pair("calendar", &phpCgiModule::calendar));
 
 }
 
 void phpCgiModule::helloWorld(HTTP::HTTPObject& req)
 {
-    std::string pathScript = "php-cgi " + _path + "HelloWorld.php";
+    std::string pathScript = "php-cgi -f" + _path + "HelloWorld.php";
 
     std::string output = exec(pathScript);
     req.setBody(output);
@@ -37,6 +38,14 @@ void phpCgiModule::fillArg(const std::string& arg, HTTP::HTTPObject& req, bool &
         } 
     }
     
+}
+
+void phpCgiModule::calendar(HTTP::HTTPObject& req)
+{
+    std::string pathScript = "php-cgi -f " + _path + "calendarioSessao.php";
+
+    std::string output = exec(pathScript);
+    req.setBody(output);
 }
 
 void phpCgiModule::webName(HTTP::HTTPObject& req)
