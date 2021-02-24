@@ -13,6 +13,7 @@
 #include <string>
 #include "tcpConnection.hpp"
 #include "SignalHandler.hpp"
+#include "configHandler.hpp"
 
 class serverCore {
     public:
@@ -24,12 +25,17 @@ class serverCore {
         ~serverCore() = default;
     private:
         void startAccept();
-        void handleAccept(tcpConnection::pointer newConnection, const boost::system::error_code& error);
-        void serverEndHandler(const boost::system::error_code&);
+        void handleAccept(std::shared_ptr<ISocketHandler>& newConnection, const boost::system::error_code& error);
+        void serverEndHandler(const std::string& configPath, const boost::system::error_code&);
         boost::asio::ip::tcp::acceptor _acceptor;
         configPaths _paths;
         SignalHandler _sigHandler;
         boost::asio::steady_timer _t;
+        boost::asio::ssl::context _ctx;
+        std::time_t _lastUpdate;
+        configHandler _confHandler;
+        moduleManager _modManager;
+        std::vector<std::shared_ptr<ISocketHandler>> _sockHandlers;
 };
 
 #endif /* !SERVERCORE_HPP_ */

@@ -20,6 +20,8 @@ set(SRCS_SERVER ${SRCS_SERVER_DIR}/jsonReader.cpp
                 ${SRCS_SERVER_DIR}/SignalHandler.cpp
                 ${INCLUDES_SNAKE_DIR}/src/Coord.cpp
                 ${INCLUDES_SNAKE_DIR}/src/Snake.cpp
+                ${SRCS_SERVER_DIR}/moduleManager.cpp
+                ${SRCS_SERVER_DIR}/ASocketHandler.cpp
 )
 
 # -------------------------------- TESTS SERVER -------------------------------- #

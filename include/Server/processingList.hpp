@@ -18,12 +18,13 @@ class processingList {
     void remove(const unsigned int pos = 0);
     void clear();
     moduleType getCurrentType() const;
+    std::vector<moduleType>& getList();
     size_t getSize()const;
     processingList(const processingList& other) = default;
-    processingList& operator=(const processingList& other) = default;
+    processingList& operator=(const processingList& other);
     ~processingList() = default;
 private:
-    std::vector <moduleType> _list;
+    std::vector<moduleType> _list;
 };
 
 #endif /* !PROCESSINGLIST_HPP_ */

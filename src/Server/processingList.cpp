@@ -17,6 +17,17 @@ void processingList::add(const moduleType &type, const unsigned int pos)
     }
 }
 
+processingList& processingList::operator=(const processingList& other)
+{
+    this->_list = other._list;
+    return(*this);
+}
+
+std::vector<moduleType>& processingList::getList()
+{
+    return (_list);
+}
+
 void processingList::remove(const unsigned int pos)
 {
     auto sizeMax = (_list.size() - 1);

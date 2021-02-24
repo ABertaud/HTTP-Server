@@ -1,16 +1,15 @@
 /*
-** DLLoader.hpp for OOP_Bootstrap_Arcade_2019 in /home/arthurbertaud/Second_year/OOP/OOP_Bootstrap_Arcade_2019
-**
-** Made by arthurbertaud
-** Login   <EPITECH>
-**
-** Started on  Tue Mar 3 11:21:01 AM 2020 arthurbertaud
-** Last update Mon Nov 1 4:37:08 PM 2020 arthurbertaud
+** EPITECH PROJECT, 2020
+** B-YEP-500-NAN-5-1-zia-arthur.bertaud
+** File description:
+** DLLoader.hpp
 */
+
 #ifndef DLLOADER_HPP_
 #define DLLOADER_HPP_
 #include <iostream>
 #include "Error.hpp"
+#include <memory>
 #ifdef __linux__
     #include <dlfcn.h>
     #define LIBTYPE void*

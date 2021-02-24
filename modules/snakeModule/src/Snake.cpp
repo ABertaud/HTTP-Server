@@ -32,21 +32,8 @@ void Snake::processRequest(HTTP::HTTPObject& req)
             (this->*(met.second))(req);
 }
 
-void Snake::init(const std::string& path, boost::asio::ip::tcp::socket& sock)
+void Snake::init([[maybe_unused]] const std::string& path)
 {
-    (void)path;
-    (void)sock;
-}
-
-void Snake::onReceive(const boost::asio::ip::tcp::socket& sock)
-{
-    (void)sock;
-}
-
-void Snake::onSend(const boost::asio::ip::tcp::socket& sock, const std::string& toSend)
-{
-    (void)sock;
-    (void)toSend;
 }
 
 moduleType Snake::getModuleType() const

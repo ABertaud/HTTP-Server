@@ -14,6 +14,9 @@ include_directories(${INCLUDE_SERVER_DIR})
 set(SRCS_SERVER ${SRCS_SERVER_DIR}/Error.cpp
                 ${SRCS_SERVER_DIR}/processingList.cpp
                 ${SRCS_SERVER_DIR}/HTTPObject.cpp
+                ${SRCS_SERVER_DIR}/moduleManager.cpp
+                ${SRCS_SERVER_DIR}/ASocketHandler.cpp
+                ${SRCS_SERVER_DIR}/requestManager.cpp
 )
 
 # -------------------------------- SSLMODULE SOURCES -------------------------------- #

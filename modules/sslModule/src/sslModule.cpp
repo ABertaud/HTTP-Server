@@ -9,50 +9,72 @@
 #include <memory>
 
 sslModule::sslModule()
-: _ctx(boost::asio::ssl::context::sslv23), _isInit(false)
 {
 }
 
-void sslModule::processRequest(HTTP::HTTPObject& req)
+void sslModule::processRequest([[maybe_unused]] HTTP::HTTPObject& req)
 {
-    (void)req;
 }
 
-void sslModule::init(const std::string& path, boost::asio::ip::tcp::socket& sock)
+void sslModule::init([[maybe_unused]] const std::string& path)
 {
-    // Load certificate in context (file = "mycert.pem")
-    // Send the path in the config file
-    _ctx.set_verify_mode(boost::asio::ssl::verify_peer);
-    _ctx.load_verify_file(path);
-    // Create a ssl stream from the given socket and class context (_ctx)
-    boost::asio::ssl::stream<boost::asio::ip::tcp::socket> ssl_sock(sock.get_executor().context(), _ctx);
-
-    // Resolve the hostname
-    boost::asio::ip::tcp::resolver resolver(sock.get_executor().context());
-    boost::asio::ip::tcp::resolver::query query("127.0.0.1", "https");
-    boost::asio::connect(ssl_sock.lowest_layer(), resolver.resolve(query));
-    ssl_sock.lowest_layer().set_option(boost::asio::ip::tcp::no_delay(true));
-
-    ssl_sock.set_verify_mode(boost::asio::ssl::verify_peer);
-    ssl_sock.set_verify_callback(boost::asio::ssl::rfc2818_verification("127.0.0.1"));
-    ssl_sock.handshake(boost::asio::ssl::stream<boost::asio::ip::tcp::socket>::client);
-    _isInit = true;
-}
-
-void sslModule::onReceive(const boost::asio::ip::tcp::socket& sock)
-{
-    (void)sock;
-}
-
-void sslModule::onSend(const boost::asio::ip::tcp::socket& sock, const std::string& toSend)
-{
-    (void)sock;
-    (void)toSend;
 }
 
 moduleType sslModule::getModuleType() const
 {
     return (moduleType::SSL_MODULE);
+}
+
+
+void sslModule::prepareSocketHandler(boost::asio::io_context& ioContext, const moduleManager& modManager, boost::asio::ssl::context& ctx)
+{
+    _socket = std::make_shared<sslSocket>(ioContext, ctx);
+    _reqManager.addModuleManager(modManager);
+}
+
+void sslModule::start()
+{
+    std::memset(_data, '\0', BUFFER_SIZE);
+    _socket->async_handshake(boost::asio::ssl::stream_base::server,
+    boost::bind(&sslModule::handleHandshake, this,
+    boost::asio::placeholders::error));
+}
+
+boost::asio::basic_socket<boost::asio::ip::tcp>& sslModule::getSocket()
+{
+    return (_socket->lowest_layer());
+}
+
+void sslModule::handleHandshake(const boost::system::error_code& error)
+{
+    if (!error) {
+        std::cout << "Handshake Done!" << std::endl;
+        _socket->async_read_some(boost::asio::buffer(_data, BUFFER_SIZE),
+            boost::bind(&sslModule::handleRead, this,
+            boost::asio::placeholders::error,
+            boost::asio::placeholders::bytes_transferred));
+    }
+    else {
+        std::cout << "Session ended ..." << std::endl;
+        delete this;
+    }
+}
+
+void sslModule::handleRead(const boost::system::error_code& err, size_t bytesTransferred)
+{
+    (void)bytesTransferred;
+    if (!err) {
+        std::cout << "ssl :";
+        std::cout << _data << std::endl;
+        std::string req(_data);
+        std::thread reqThread(static_cast<void (requestManager::*)(const std::string&, sslSocket&)>(&requestManager::launchRequest), _reqManager, std::ref(req), std::ref(*_socket));
+        reqThread.join();
+        // _reqManager.launchRequest(req, pList, _socket);
+        start();
+    } else {
+        std::cerr << "error: " << err.message() << "kk" << std::endl;
+        _socket->lowest_layer().close();
+    }
 }
 
 #if defined (_WIN32)

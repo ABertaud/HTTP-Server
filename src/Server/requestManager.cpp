@@ -11,59 +11,62 @@ requestManager::requestManager()
 {
 }
 
-void requestManager::reload(std::unordered_map<moduleType, std::string>& modulePaths)
+
+void requestManager::addModuleManager(const moduleManager& modManager)
 {
-    loadModules(modulePaths);
+    _modManager = modManager;
 }
 
-void requestManager::launchRequest(const std::string& req, processingList& list, boost::asio::ip::tcp::socket& socket)
+void requestManager::launchRequest(const std::string& req, boost::asio::ip::tcp::socket& socket)
 {
+    _modManager.loadModules();
     try {
         HTTP::HTTPObject request(req);
-        moduleType type = list.getCurrentType();
+        moduleType type = _processList.getCurrentType();
 
         while (type != moduleType::NONE) {
-            for (auto &mod : _modules)
-                if (mod->getModuleType() == type) {
-                    mod->processRequest(request);
-                }
-            list.remove();
-            type = list.getCurrentType();
+            _modManager.getModule(type)->processRequest(request);
+            _processList.remove();
+            type = _processList.getCurrentType();
         }
         // request.setHTTPCode("200");
         auto answer = request.createResponse(false).toString();
-        socket.send(boost::asio::buffer(answer));
+        boost::asio::write(socket, boost::asio::buffer(answer));
+        // socket.send(boost::asio::buffer(answer));
     } catch (ErrorHTTPObject& e) {
-        socket.send(boost::asio::buffer("400 Bad Request Error"));
+        boost::asio::write(socket, boost::asio::buffer("400 Bad Request Error"));
         return;
     }
 }
 
-void requestManager::loadModules(std::unordered_map<moduleType, std::string>& modulePaths)
+void requestManager::launchRequest(const std::string& req, boost::asio::ssl::stream<boost::asio::ip::tcp::socket>& socket)
 {
-    for (auto& path : modulePaths) {
-        if (_loaders.count(path.first) == 0)
-            _loaders.insert(std::make_pair(path.first, std::shared_ptr<DLLoader>{new DLLoader(path.second)}));
-    }
-    for (auto& load : _loaders) {
-        if (doesModuleExist(load.first) == false) {
-            _modules.push_back(load.second->getInstance<IModule>("entryPoint"));
+    _modManager.loadModules();
+    try {
+        HTTP::HTTPObject request(req);
+        moduleType type = _processList.getCurrentType();
+
+        while (type != moduleType::NONE) {
+            std::cout << type << std::endl;
+            _modManager.getModule(type)->processRequest(request);
+            _processList.remove();
+            type = _processList.getCurrentType();
         }
+        // request.setHTTPCode("200");
+        auto answer = request.createResponse(false).toString();
+        boost::asio::write(socket, boost::asio::buffer(answer));
+        // socket.send(boost::asio::buffer(answer));
+    } catch (ErrorHTTPObject& e) {
+        boost::asio::write(socket, boost::asio::buffer("400 Bad Request Error"));
+        return;
     }
 }
 
-bool requestManager::doesModuleExist(const moduleType& type)
+void requestManager::reload(std::unordered_map<moduleType, std::string>& modulePaths, const processingList &processList, const std::string& cgiPath)
 {
-    for (auto& module : _modules)
-        if (module->getModuleType() == type)
-            return (true);
-    return (false);
-}
-
-std::shared_ptr<IModule> &requestManager::getModule(const moduleType& type)
-{
-    for (auto& module : _modules)
-        if (module->getModuleType() == type)
-            return (module);
-    return (_modules.front());
+    _modManager.loadLoaders(modulePaths);
+    _modManager.loadModules();
+    _processList = processList;
+    if (_modManager.doesModuleExist(moduleType::PHPCGI))
+        _modManager.getModule(moduleType::PHPCGI)->init(cgiPath);
 }
