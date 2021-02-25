@@ -29,6 +29,7 @@ class sslModule : public IModule, public ASocketHandler {
     private:
         void handleRead(const boost::system::error_code& err, size_t bytesTransferred);
         void handleHandshake(const boost::system::error_code& error);
+        void reset();
         // boost::asio::ssl::context _ctx;
         std::shared_ptr<sslSocket> _socket;
 };

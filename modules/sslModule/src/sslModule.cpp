@@ -7,6 +7,7 @@
 
 #include "sslModule.hpp"
 #include <memory>
+#include <cstring>
 
 sslModule::sslModule()
 {
@@ -24,7 +25,6 @@ moduleType sslModule::getModuleType() const
 {
     return (moduleType::SSL_MODULE);
 }
-
 
 void sslModule::prepareSocketHandler(boost::asio::io_context& ioContext, const moduleManager& modManager, boost::asio::ssl::context& ctx)
 {
@@ -49,15 +49,25 @@ void sslModule::handleHandshake(const boost::system::error_code& error)
 {
     if (!error) {
         std::cout << "Handshake Done!" << std::endl;
-        _socket->async_read_some(boost::asio::buffer(_data, BUFFER_SIZE),
+        _socket->async_read_some(boost::asio::buffer(_data, 1024),
             boost::bind(&sslModule::handleRead, this,
             boost::asio::placeholders::error,
             boost::asio::placeholders::bytes_transferred));
     }
     else {
         std::cout << "Session ended ..." << std::endl;
-        delete this;
+        if (this)
+            delete this;
     }
+}
+
+void sslModule::reset(void)
+{
+    std::memset(_data, '\0', BUFFER_SIZE);
+    _socket->async_read_some(boost::asio::buffer(_data, 1024),
+        boost::bind(&sslModule::handleRead, this,
+        boost::asio::placeholders::error,
+        boost::asio::placeholders::bytes_transferred));
 }
 
 void sslModule::handleRead(const boost::system::error_code& err, size_t bytesTransferred)
@@ -69,10 +79,14 @@ void sslModule::handleRead(const boost::system::error_code& err, size_t bytesTra
         std::string req(_data);
         std::thread reqThread(static_cast<void (requestManager::*)(const std::string&, sslSocket&)>(&requestManager::launchRequest), _reqManager, std::ref(req), std::ref(*_socket));
         reqThread.join();
+
+        boost::asio::write(*_socket.get(), boost::asio::buffer("HTTP/1.1 200 OK\n", 17));
+
+        reset();
         // _reqManager.launchRequest(req, pList, _socket);
-        start();
+        // start();
     } else {
-        std::cerr << "error: " << err.message() << "kk" << std::endl;
+        std::cerr << "error: " << err.message() << std::endl;
         _socket->lowest_layer().close();
     }
 }
