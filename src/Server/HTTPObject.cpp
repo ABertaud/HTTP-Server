@@ -216,7 +216,7 @@ void HTTP::HTTPObject::parseHeaders(const std::string& request)
     }
 }
 
-HTTP::HTTPObject& HTTP::HTTPObject::createResponse(bool defaultBody)
+HTTP::HTTPObject& HTTP::HTTPObject::createResponse(void)
 {
     std::string strRes;
 
@@ -229,7 +229,7 @@ HTTP::HTTPObject& HTTP::HTTPObject::createResponse(bool defaultBody)
     _startLine["Code"].push_back(_httpCode);
     _startLine["Description"].push_back(getCodeDesc(_httpCode));
     _type = HTTP::RES;
-    if (defaultBody) {
+    if (_bodyContent.empty()) {
         std::string defaultHtml1 = "<!DOCTYPE html><head><title>Zia</title></head><body><center><h1>HTTP ";
         defaultHtml1 += _httpCode+" "+_httpCodes[_httpCode]+"</h1></center></body>";
         _headers["Content-Length"].push_back(std::to_string(defaultHtml1.size()));
@@ -237,11 +237,9 @@ HTTP::HTTPObject& HTTP::HTTPObject::createResponse(bool defaultBody)
         _body["Body"].push_back(defaultHtml1);
         return (*this);
     }
-    if (!_bodyContent.empty()) {
-        _headers["Content-Length"].push_back(std::to_string(_bodyContent.size()));
-        _headersOrderList.push_back("Content-Length");
-        _body["Body"].push_back(_bodyContent);
-    }
+    _headers["Content-Length"].push_back(std::to_string(_bodyContent.size()));
+    _headersOrderList.push_back("Content-Length");
+    _body["Body"].push_back(_bodyContent);
     return (*this);
 }
 

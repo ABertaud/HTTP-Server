@@ -168,7 +168,7 @@ namespace HTTP {
              *  @param body (Optionnal) The body of the res (if needed)
              *  @return HTTPObject Will return the object itself so that it can be chained with another method
              */
-            HTTP::HTTPObject& createResponse(bool defaultBody = true);
+            HTTP::HTTPObject& createResponse(void);
             /** @brief This function will fill the _params map in the class with the params in the strParams
              *  @param defaultBody (Default = true) bool Depending on the value will create a html template body with the http code. Set it to false if you want to use yout own body. 
              *  @return Void
