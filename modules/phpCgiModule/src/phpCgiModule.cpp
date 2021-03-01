@@ -81,7 +81,7 @@ void phpCgiModule::setExecBody(const std::string& output, HTTP::HTTPObject& req)
     int check = std::strcmp(output.c_str(), "No input file specified.\n");
     
     if (check == 0)
-        req.setBody("404 Not Found\n");
+        req.setHTTPCode("404");
     else
         req.setBody(output);
 }
@@ -100,7 +100,7 @@ void phpCgiModule::processRequest(HTTP::HTTPObject& req)
         }
     }
     if (err == false)
-        req.setHTTPCode("400 Bad Request\n");
+        req.setHTTPCode("400");
     /*std::string phpFile = req[HTTP::BODY]["Body"][0];
     std::ofstream tmpFile ("tmp.php");
 

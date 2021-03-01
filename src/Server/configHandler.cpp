@@ -171,17 +171,3 @@ void configHandler::reload()
         throw err;
     }
 }
-
-/*
-{
-    "zia": {
-        "modules": [
-            "libphpCgiModule",
-            "libsnakeModule"
-        ],
-        "SSL Certificate Path": "../config/SSL/mycert.pem",
-        "CGI Dir Path": "../config/PHP/"
-    }
-}
-
-*/
