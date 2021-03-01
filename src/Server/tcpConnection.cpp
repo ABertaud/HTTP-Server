@@ -42,7 +42,8 @@ void tcpConnection::handleRead(const boost::system::error_code& err, size_t byte
         std::cout << _data << std::endl;
         std::string req(_data);
         std::thread reqThread(static_cast<void (requestManager::*)(const std::string&, boost::asio::ip::tcp::socket&)>(&requestManager::launchRequest), _reqManager, std::ref(req), std::ref(*_socket));
-        reqThread.join();
+        if (reqThread.joinable() == true)
+            reqThread.join();
         // _reqManager.launchRequest(req, pList, _socket);
         start();
     } else {

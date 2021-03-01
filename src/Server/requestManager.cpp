@@ -30,7 +30,7 @@ void requestManager::launchRequest(const std::string& req, boost::asio::ip::tcp:
             type = _processList.getCurrentType();
         }
         // request.setHTTPCode("200");
-        auto answer = request.createResponse(false).toString();
+        auto answer = request.createResponse().toString();
         boost::asio::write(socket, boost::asio::buffer(answer));
         // socket.send(boost::asio::buffer(answer));
     } catch (ErrorHTTPObject& e) {
@@ -53,10 +53,11 @@ void requestManager::launchRequest(const std::string& req, boost::asio::ssl::str
             type = _processList.getCurrentType();
         }
         // request.setHTTPCode("200");
-        auto answer = request.createResponse(false).toString();
+        auto answer = request.createResponse().toString();
         boost::asio::write(socket, boost::asio::buffer(answer));
         // socket.send(boost::asio::buffer(answer));
     } catch (ErrorHTTPObject& e) {
+        std::cout << e.what() << std::endl;
         boost::asio::write(socket, boost::asio::buffer("400 Bad Request Error"));
         return;
     }

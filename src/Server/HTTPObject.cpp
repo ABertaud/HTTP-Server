@@ -199,6 +199,8 @@ void HTTP::HTTPObject::parseHeaders(const std::string& request)
     std::string elem;
     std::string key;
 
+    std::cout << "req!!: ";
+    std::cout << request << std::endl;
     if (header.empty())
         throw ErrorNoHost();
     header[header.find_last_of('\n')] = '\0';

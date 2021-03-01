@@ -56,15 +56,17 @@ void sslModule::handleHandshake(const boost::system::error_code& error)
     }
     else {
         std::cout << "Session ended ..." << std::endl;
-        if (this)
-            delete this;
+        if (this) {
+            _socket->shutdown();
+            _socket->lowest_layer().close();
+        }
     }
 }
 
 void sslModule::reset(void)
 {
     std::memset(_data, '\0', BUFFER_SIZE);
-    _socket->async_read_some(boost::asio::buffer(_data, 1024),
+    _socket->async_read_some(boost::asio::buffer(_data, BUFFER_SIZE),
         boost::bind(&sslModule::handleRead, this,
         boost::asio::placeholders::error,
         boost::asio::placeholders::bytes_transferred));
@@ -74,19 +76,21 @@ void sslModule::handleRead(const boost::system::error_code& err, size_t bytesTra
 {
     (void)bytesTransferred;
     if (!err) {
-        std::cout << "ssl :";
-        std::cout << _data << std::endl;
         std::string req(_data);
+        if (req.empty()) {
+            reset();
+            return;
+        }
+        std::cout << "ssl :";
+        std::cout << req << std::endl;
         std::thread reqThread(static_cast<void (requestManager::*)(const std::string&, sslSocket&)>(&requestManager::launchRequest), _reqManager, std::ref(req), std::ref(*_socket));
-        reqThread.join();
-
-        boost::asio::write(*_socket.get(), boost::asio::buffer("HTTP/1.1 200 OK\n", 17));
-
+        if (reqThread.joinable() == true)
+            reqThread.join();
+        // boost::asio::write(*_socket.get(), boost::asio::buffer("HTTP/1.1 200 OK\n", 17));
         reset();
-        // _reqManager.launchRequest(req, pList, _socket);
-        // start();
     } else {
         std::cerr << "error: " << err.message() << std::endl;
+        _socket->shutdown();
         _socket->lowest_layer().close();
     }
 }
