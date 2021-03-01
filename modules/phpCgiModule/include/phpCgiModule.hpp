@@ -70,6 +70,10 @@ class phpCgiModule : public IModule {
         *  @param request send by the server, that will contain all information
         */
         void calendar(HTTP::HTTPObject& req);
+        /** @brief This function will check if the execution work fine or fill the right error code
+        *  @param output of the php execution script
+        *  @param request send by the server, that will contain all information
+        */
         void setExecBody(const std::string& output, HTTP::HTTPObject& req);
 };
 
