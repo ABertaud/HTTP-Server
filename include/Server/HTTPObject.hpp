@@ -201,6 +201,9 @@ namespace HTTP {
             void setBody(const std::string& newBody);
             /** @brief This function will get the _httpCode variable */
             const std::string& getHTTPCode(void) const;
+            /** @brief This function will get the HTTPObject body content.
+            */
+            std::string& getBody(void);
         private:
             /** @brief This function will clear all keys and their content in all the unordered_maps (STARTLINE, HEADERS, BODY)
              *  @return Void

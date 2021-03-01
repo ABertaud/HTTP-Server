@@ -199,8 +199,6 @@ void HTTP::HTTPObject::parseHeaders(const std::string& request)
     std::string elem;
     std::string key;
 
-    std::cout << "req!!: ";
-    std::cout << request << std::endl;
     if (header.empty())
         throw ErrorNoHost();
     header[header.find_last_of('\n')] = '\0';
@@ -312,6 +310,11 @@ void HTTP::HTTPObject::setHTTPCode(const std::string& newCode)
 void HTTP::HTTPObject::setBody(const std::string& newBody)
 {
     _bodyContent = newBody;
+}
+
+std::string& HTTP::HTTPObject::getBody(void)
+{
+    return (_bodyContent);
 }
 
 const std::string& HTTP::HTTPObject::getHTTPCode(void) const
