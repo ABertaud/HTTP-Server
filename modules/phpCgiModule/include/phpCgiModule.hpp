@@ -12,6 +12,7 @@
 #include <fstream>
 #include <memory>
 #include <filesystem>
+#include <cstring>
 
 /** @class phpCgiModule
 *  @brief The phpCgiModule class is a class that will execute PHP scripts as CGI
@@ -69,6 +70,7 @@ class phpCgiModule : public IModule {
         *  @param request send by the server, that will contain all information
         */
         void calendar(HTTP::HTTPObject& req);
+        void setExecBody(const std::string& output, HTTP::HTTPObject& req);
 };
 
 

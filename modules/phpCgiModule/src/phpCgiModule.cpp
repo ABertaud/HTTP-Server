@@ -22,7 +22,7 @@ void phpCgiModule::helloWorld(HTTP::HTTPObject& req)
     std::string pathScript = "php-cgi -f " + _path + "HelloWorld.php";
 
     std::string output = exec(pathScript);
-    req.setBody(output);
+    setExecBody(output, req);
 }
 
 void phpCgiModule::fillArg(const std::string& arg, HTTP::HTTPObject& req, bool &take, std::vector <std::string>& names)
@@ -45,7 +45,7 @@ void phpCgiModule::calendar(HTTP::HTTPObject& req)
     std::string pathScript = "php-cgi -f " + _path + "calendarioSessao.php";
 
     std::string output = exec(pathScript);
-    req.setBody(output);
+    setExecBody(output, req);
 }
 
 void phpCgiModule::webName(HTTP::HTTPObject& req)
@@ -73,18 +73,34 @@ void phpCgiModule::webName(HTTP::HTTPObject& req)
     }
     pathScript += firstName + " " + lastName;
     std::string output = exec(pathScript);
-    req.setBody(output);
+    setExecBody(output, req);
+}
+
+void phpCgiModule::setExecBody(const std::string& output, HTTP::HTTPObject& req)
+{
+    int check = std::strcmp(output.c_str(), "No input file specified.\n");
+    
+    if (check == 0)
+        req.setBody("404 Not Found\n");
+    else
+        req.setBody(output);
 }
 
 void phpCgiModule::processRequest(HTTP::HTTPObject& req)
 {
     auto params =  req.getParams();
+    bool err = false;
+
     for (auto it = params.begin(); it != params.end(); ++it) {
         for (auto& met : _methods) {
-            if (met.first == it->second)
+            if (met.first == it->second) {
                 (this->*(met.second))(req);
+                err = true;
+            }
         }
     }
+    if (err == false)
+        req.setHTTPCode("400 Bad Request\n");
     /*std::string phpFile = req[HTTP::BODY]["Body"][0];
     std::ofstream tmpFile ("tmp.php");
 
