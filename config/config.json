@@ -1,6 +1,7 @@
 {
     "zia": {
         "modules": [
+            "phpCgiModule",
             "sslModule",
             "snakeModule"
         ],

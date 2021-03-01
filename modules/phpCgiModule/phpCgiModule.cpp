@@ -19,7 +19,7 @@ phpCgiModule::phpCgiModule() : _path()
 
 void phpCgiModule::helloWorld(HTTP::HTTPObject& req)
 {
-    std::string pathScript = "php-cgi -f " + _path + "HelloWorld.php";
+    std::string pathScript = "php-cgi -f" + _path + "HelloWorld.php";
 
     std::string output = exec(pathScript);
     req.setBody(output);
@@ -58,6 +58,7 @@ void phpCgiModule::webName(HTTP::HTTPObject& req)
     bool take = false;
     int i = 0;
     std::vector<std::string> sortMap;
+    std::cout << "yo3" <<std::endl;
 
     for (auto it = params.begin(); it != params.end(); ++it)
         sortMap.push_back(it->first);
@@ -73,6 +74,7 @@ void phpCgiModule::webName(HTTP::HTTPObject& req)
     }
     pathScript += firstName + " " + lastName;
     std::string output = exec(pathScript);
+    std::cout << "yo3" <<std::endl;
     req.setBody(output);
 }
 
@@ -80,6 +82,7 @@ void phpCgiModule::processRequest(HTTP::HTTPObject& req)
 {
     auto params =  req.getParams();
     for (auto it = params.begin(); it != params.end(); ++it) {
+        std::cout << it->second <<std::endl;
         for (auto& met : _methods) {
             if (met.first == it->second)
                 (this->*(met.second))(req);
@@ -96,9 +99,10 @@ void phpCgiModule::processRequest(HTTP::HTTPObject& req)
     req.setBody(output);*/
 }
 
-void phpCgiModule::init(const std::string& path) 
+void phpCgiModule::init(const std::string& path, boost::asio::ip::tcp::socket& sock) 
 { 
     _path = path;
+    (void)sock;
 }
 
 std::string phpCgiModule::exec(const std::string& cmd) 
@@ -112,6 +116,17 @@ std::string phpCgiModule::exec(const std::string& cmd)
         result += buffer.data();
     }
     return result;
+}
+
+void phpCgiModule::onReceive(const boost::asio::ip::tcp::socket& sock)
+{
+    (void)sock;
+}
+
+void phpCgiModule::onSend(const boost::asio::ip::tcp::socket& sock, const std::string& toSend)
+{
+    (void)sock;
+    (void)toSend;
 }
 
 moduleType phpCgiModule::getModuleType() const

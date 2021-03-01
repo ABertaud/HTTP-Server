@@ -1,5 +1,6 @@
 set(INCLUDES_SERVER_DIR ${PROJECT_SOURCE_DIR}/include/Server)
 set(INCLUDES_SNAKE_DIR ${PROJECT_SOURCE_DIR}/modules/snakeModule)
+set(INCLUDES_PHPCGI_DIR ${PROJECT_SOURCE_DIR}/modules/phpCgiModule)
 set(SRCS_SERVER_DIR ${PROJECT_SOURCE_DIR}/src/Server)
 set(TESTS_SERVER_DIR ${PROJECT_SOURCE_DIR}/tests)
 
@@ -18,8 +19,9 @@ set(SRCS_SERVER ${SRCS_SERVER_DIR}/jsonReader.cpp
                 ${SRCS_SERVER_DIR}/requestManager.cpp
                 ${SRCS_SERVER_DIR}/configHandler.cpp
                 ${SRCS_SERVER_DIR}/SignalHandler.cpp
-                ${INCLUDES_SNAKE_DIR}/src/Coord.cpp
-                ${INCLUDES_SNAKE_DIR}/src/Snake.cpp
+        #        ${INCLUDES_SNAKE_DIR}/src/Coord.cpp
+        #        ${INCLUDES_SNAKE_DIR}/src/Snake.cpp
+                ${INCLUDES_PHPCGI_DIR}/src/phpCgiModule.cpp
                 ${SRCS_SERVER_DIR}/moduleManager.cpp
                 ${SRCS_SERVER_DIR}/ASocketHandler.cpp
 )
@@ -30,7 +32,8 @@ set(TESTS_SERVER ${TESTS_SERVER_DIR}/testJsonReader.cpp
                  ${TESTS_SERVER_DIR}/testProcessingList.cpp
                  ${TESTS_SERVER_DIR}/testHTTPObject.cpp
                  ${TESTS_SERVER_DIR}/testConfigHandler.cpp
-                 ${TESTS_SERVER_DIR}/testSnakeModule.cpp
+     #            ${TESTS_SERVER_DIR}/testSnakeModule.cpp
+                 ${TESTS_SERVER_DIR}/testPhpCgiModule.cpp
 )
 
 add_executable(unit_tests_server ${TESTS_SERVER} ${SRCS_SERVER})
@@ -41,6 +44,7 @@ target_compile_options(unit_tests_server
                        $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>:-Wextra -Wall -Wsign-conversion -Wfloat-equal -pedantic -Wredundant-decls -Wshadow -Wpointer-arith -O3>)
 target_include_directories(unit_tests_server PRIVATE SYSTEM ${INCLUDES_SERVER_DIR})
 target_include_directories(unit_tests_server PRIVATE SYSTEM ${INCLUDES_SNAKE_DIR}/include)
+target_include_directories(unit_tests_server PRIVATE SYSTEM ${INCLUDES_PHPCGI_DIR}/include)
 target_link_libraries(unit_tests_server criterion)
 target_link_libraries(unit_tests_server ${CONAN_LIBS})
 target_link_libraries(unit_tests_server ${CMAKE_THREAD_LIBS_INIT})

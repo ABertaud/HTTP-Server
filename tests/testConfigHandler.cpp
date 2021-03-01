@@ -21,10 +21,10 @@ Test(testPathSoError, configHandler)
         "{\n",
         "    \"zia\": {\n",
         "        \"modules\": [\n",
-        "            \"libphpCgiModule\",\n",
-        "            \"SSL_TSL\",\n",
-        "            \"Snake\",\n",
-        "            \"File_Server\"\n",
+        "            \"libphpCgiModulett\",\n",
+        "            \"sslModule\",\n",
+        "            \"libsnakeModule\",\n",
+        "            \"file_Server\"\n",
         "        ]\n",
         "    }\n",
         "}",
@@ -40,7 +40,7 @@ Test(testPathSoError, configHandler)
         configHandler configHand(paths);
     }
     catch (Error &e) {
-        cr_assert(std::strcmp(e.what(), "Error config file: one module doesn't exist") == 0);
+        cr_assert(std::strcmp(e.what(), "Error config file: one module name doesn't exist") == 0);
     }
     sleep(1);
 }
@@ -82,10 +82,10 @@ Test(TestAllGood, configHandler)
         "{\n",
         "    \"zia\": {\n",
         "        \"modules\": [\n",
-        "            \"libphpCgiModule\",\n",
-        "            \"SSL_TSL\",\n",
-        "            \"Snake\",\n",
-        "            \"File_Server\"\n",
+        "            \"phpCgiModule\",\n",
+        "            \"sslModule\",\n",
+        "            \"snakeModule\",\n",
+        "            \"file_Server\"\n",
         "        ]\n",
         "    }\n",
         "}",
@@ -93,11 +93,11 @@ Test(TestAllGood, configHandler)
     };
     std::ofstream phpSo ("FileSo/libphpCgiModule.so");
     phpSo.close();
-    std::ofstream sslSo ("FileSo/libSSL_TSL.so");
+    std::ofstream sslSo ("FileSo/libsslModule.so");
     sslSo.close();
-    std::ofstream snakeSo ("FileSo/libSnake.so");
+    std::ofstream snakeSo ("FileSo/libsnakeModule.so");
     snakeSo.close();
-    std::ofstream serverSo ("FileSo/libFile_Server.so");
+    std::ofstream serverSo ("FileSo/libfile_Server.so");
     serverSo.close();
     std::ofstream outfile ("test.txt");
     std::unordered_map<moduleType, std::string> modulePaths;
@@ -113,7 +113,6 @@ Test(TestAllGood, configHandler)
     }
     catch (Error &e) {
     }
-    // std::cout << modulePaths[moduleType::PHPCGI] << std::endl;
     cr_assert_eq(modulePaths[moduleType::PHPCGI], "FileSo/libphpCgiModule.so");
     sleep(1);
 }
@@ -126,22 +125,22 @@ Test(TestgetModule, configHandler)
         "{\n",
         "    \"zia\": {\n",
         "        \"modules\": [\n",
-        "            \"libphpCgiModule\",\n",
-        "            \"SSL_TSL\",\n",
-        "            \"Snake\",\n",
-        "            \"File_Server\"\n",
+        "            \"phpCgiModule\",\n",
+        "            \"sslModule\",\n",
+        "            \"snakeModule\",\n",
+        "            \"file_Server\"\n",
         "        ]\n",
         "    }\n",
         "}",
         "\0"
     };
-    std::ofstream phpSo ("FileSo/PHP_CGI.so");
+    std::ofstream phpSo ("FileSo/libphpCgiModule.so");
     phpSo.close();
-    std::ofstream sslSo ("FileSo/SSL_TSL.so");
+    std::ofstream sslSo ("FileSo/libsslModule.so");
     sslSo.close();
-    std::ofstream snakeSo ("FileSo/Snake.so");
+    std::ofstream snakeSo ("FileSo/libsnakeModule.so");
     snakeSo.close();
-    std::ofstream serverSo ("FileSo/File_Server.so");
+    std::ofstream serverSo ("FileSo/libfile_Server.so");
     serverSo.close();
     std::ofstream outfile ("test.txt");
     for (int index = 0; tab[index].length() != 0; index++)
@@ -171,22 +170,22 @@ Test(TestgetProcess, configHandler)
         "{\n",
         "    \"zia\": {\n",
         "        \"modules\": [\n",
-        "            \"libphpCgiModule\",\n",
-        "            \"SSL_TSL\",\n",
-        "            \"Snake\",\n",
-        "            \"File_Server\"\n",
+        "            \"phpCgiModule\",\n",
+        "            \"sslModule\",\n",
+        "            \"snakeModule\",\n",
+        "            \"file_Server\"\n",
         "        ]\n",
         "    }\n",
         "}",
         "\0"
     };
-    std::ofstream phpSo ("FileSo/PHP_CGI.so");
+    std::ofstream phpSo ("FileSo/libphpCgiModule.so");
     phpSo.close();
-    std::ofstream sslSo ("FileSo/SSL_TSL.so");
+    std::ofstream sslSo ("FileSo/libsslModule.so");
     sslSo.close();
-    std::ofstream snakeSo ("FileSo/Snake.so");
+    std::ofstream snakeSo ("FileSo/libsnakeModule.so");
     snakeSo.close();
-    std::ofstream serverSo ("FileSo/File_Server.so");
+    std::ofstream serverSo ("FileSo/libfile_Server.so");
     serverSo.close();
     std::ofstream outfile ("test.txt");
     for (int index = 0; tab[index].length() != 0; index++)

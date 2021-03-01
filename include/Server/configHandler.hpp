@@ -37,7 +37,7 @@ class configHandler
         {"phpCgiModule", PHPCGI},
         {"sslModule", SSL_MODULE},
         {"snakeModule", SNAKE},
-        {"File_Server", FILE_SERVER},
+        {"file_Server", FILE_SERVER},
         };
         void load();
         void addModuleJson(const std::string& name);
