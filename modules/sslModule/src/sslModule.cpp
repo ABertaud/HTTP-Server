@@ -57,7 +57,7 @@ void sslModule::handleHandshake(const boost::system::error_code& error)
     else {
         std::cout << "Session ended ..." << std::endl;
         if (this) {
-            _socket->shutdown();
+            // _socket->shutdown();
             _socket->lowest_layer().close();
         }
     }
@@ -90,7 +90,7 @@ void sslModule::handleRead(const boost::system::error_code& err, size_t bytesTra
         reset();
     } else {
         std::cerr << "error: " << err.message() << std::endl;
-        _socket->shutdown();
+        // _socket->shutdown();
         _socket->lowest_layer().close();
     }
 }
