@@ -24,9 +24,15 @@
     #define LIBFUNC(lib, fn) GetProcAddress((lib), (fn))
     #define CLOSELIB(handler) CloseHandle(handler)
 #endif
-class DLLoader
-{
+
+/** @class DLLoader
+    *  @brief The DLLoader class allows us to load a shared library
+*/
+class DLLoader {
 public:
+    /** @brief Ctor of DLLoader
+        *  @param libpath Exact path to the shared library(.so) to load
+    */
     DLLoader(const std::string& libpath)
     try : _handler(nullptr)
     {
@@ -43,6 +49,10 @@ public:
     {
         throw err;
     }
+    /** @brief This function gets the address where the symbol is loaded into memory, and creates an instance of Template type from it
+        *  @param name Exact name of the symbol loaded into memory
+        *  @return std::shared_ptr<T> A shared_ptr of the instance created of type T
+    */
     template <typename T>
     std::shared_ptr<T> getInstance(const std::string& name) const
     {
@@ -58,8 +68,11 @@ public:
         #endif
         return (sample());
     }
+    /** @brief Default copy ctor of DLLoader */
     DLLoader(const DLLoader& other) = default;
+    /** @brief Default overloaded '=' operator of DLLoader */
     DLLoader& operator=(const DLLoader& other) = default;
+    /** @brief Ctor of DLLoader */
     ~DLLoader()
     {
         int ret = 0;
@@ -73,6 +86,7 @@ public:
         #endif
     }
 private:
+    /** @brief Contains the type of the dynamic library */
     LIBTYPE _handler;
 };
 #endif /* !DLLOADER_HPP_ */

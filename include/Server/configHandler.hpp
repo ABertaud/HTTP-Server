@@ -29,6 +29,7 @@ class configHandler
         std::ifstream _fileErr;
         processingList _processList;
         jsonReader _json;
+        /** @brief Map containing the type of the module and on the other hand containing the exact path to its .so */
         std::unordered_map<moduleType, std::string> _modulePaths;
         configPaths _paths;
         std::string _certificatePath;
@@ -36,8 +37,7 @@ class configHandler
         const std::map<std::string, moduleType> _moduleType {
         {"phpCgiModule", PHPCGI},
         {"sslModule", SSL_MODULE},
-        {"snakeModule", SNAKE},
-        {"file_Server", FILE_SERVER},
+        {"snakeModule", SNAKE}
         };
         void load();
         void addModuleJson(const std::string& name);
