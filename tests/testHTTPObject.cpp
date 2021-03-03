@@ -119,7 +119,7 @@ Content-Length: 30\n\n\
 {\"name\": \"New item\", \"year\": \"2009\"}";
     try {
         HTTP::HTTPObject _obj(req);
-    } catch (Error &e) {
+    } catch (Error& e) {
         cr_assert(std::strcmp(e.what(), "Error: The content-length is not valid.") == 0);
     }
 }
@@ -134,7 +134,7 @@ Content-Length: 30\n\n\
 {\"name\": \"New item\", \"year\": \"2009\"}";
     try {
         HTTP::HTTPObject _obj(req);
-    } catch (Error &e) {
+    } catch (Error& e) {
         cr_assert(std::strcmp(e.what(), "Error: No host was specified in the request headers") == 0);
     }
 }
@@ -145,7 +145,7 @@ Test(emptyRequest, HTTPObject)
 
     try {
         HTTP::HTTPObject _obj(req);
-    } catch (Error &e) {
+    } catch (Error& e) {
         cr_assert(std::strcmp(e.what(), "Error: Request is empty.") == 0);
     }
 }
@@ -161,7 +161,7 @@ Content-Length: 30\n\n\
 
     try {
         HTTP::HTTPObject _obj(req);
-    } catch (Error &e) {
+    } catch (Error& e) {
         cr_assert(std::strcmp(e.what(), "Error: Unknown HTTP Method") == 0);
     }
 }

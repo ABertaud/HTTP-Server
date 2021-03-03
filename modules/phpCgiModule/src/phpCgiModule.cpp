@@ -25,7 +25,7 @@ void phpCgiModule::helloWorld(HTTP::HTTPObject& req)
     setExecBody(output, req);
 }
 
-void phpCgiModule::fillArg(const std::string& arg, HTTP::HTTPObject& req, bool &take, std::vector <std::string>& names)
+void phpCgiModule::fillArg(const std::string& arg, HTTP::HTTPObject& req, bool& take, std::vector <std::string>& names)
 {
     auto params =  req.getParams();
 

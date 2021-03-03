@@ -7,7 +7,7 @@
 
 #include "processingList.hpp"
 
-void processingList::add(const moduleType &type, const unsigned int pos)
+void processingList::add(const moduleType& type, const unsigned int pos)
 {
     if (pos > _list.size())
         _list.push_back(type);

@@ -22,7 +22,7 @@ _modulePaths(), _paths(), _certificatePath(), _CgiDir()
         _paths.dirPath = paths.dirPath;  
     _paths.configPath = paths.configPath;
     load();
-} catch (Error const &err) {
+} catch (Error const& err) {
     throw err;
 }
 
@@ -96,7 +96,7 @@ void configHandler::load()
             if (PosModule == true && endModule != std::string::npos)
                PosModule = false;
         }
-    } catch (Error const &err) {
+    } catch (Error const& err) {
         throw err;
     }
 }
@@ -167,7 +167,7 @@ void configHandler::reload()
     _processList.clear();
     try {
         load();
-    } catch (Error const &err) {
+    } catch (Error const& err) {
         throw err;
     }
 }

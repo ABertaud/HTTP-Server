@@ -39,7 +39,7 @@ Test(testPathSoError, configHandler)
         paths.configPath = "test.txt";
         configHandler configHand(paths);
     }
-    catch (Error &e) {
+    catch (Error& e) {
         cr_assert(std::strcmp(e.what(), "Error config file: one module name doesn't exist") == 0);
     }
     sleep(1);
@@ -69,7 +69,7 @@ Test(TestTagErr, configHandler)
         paths.configPath = "testErr.txt";
         configHandler configHand(paths);
     }
-    catch (Error &e) {
+    catch (Error& e) {
         cr_assert(std::strcmp(e.what(), "Error config file: one module name doesn't exist") == 0);
     }
     sleep(1);
@@ -111,7 +111,7 @@ Test(TestAllGood, configHandler)
         configHandler configHand(paths);
         modulePaths = configHand.getListModules();
     }
-    catch (Error &e) {
+    catch (Error& e) {
     }
     cr_assert_eq(modulePaths[moduleType::PHPCGI], "FileSo/libphpCgiModule.so");
     sleep(1);
@@ -157,7 +157,7 @@ Test(TestgetModule, configHandler)
         size = modulePaths.size();
         cr_assert_eq(size, 0);
     }
-    catch (Error &e) {
+    catch (Error& e) {
     }
     sleep(1);
 }
@@ -200,7 +200,7 @@ Test(TestgetProcess, configHandler)
         size = processList.getSize();
         cr_assert_eq(size, 4);
     }
-    catch (Error &e) {
+    catch (Error& e) {
     }
     sleep(1);
 }

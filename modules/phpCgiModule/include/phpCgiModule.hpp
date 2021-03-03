@@ -47,7 +47,7 @@ class phpCgiModule : public IModule {
         *  @param conditional param to take args if he's true
         *  @param array that will be sort at the end
         */
-        void fillArg(const std::string& arg, HTTP::HTTPObject& req, bool &take, std::vector <std::string>& names);
+        void fillArg(const std::string& arg, HTTP::HTTPObject& req, bool& take, std::vector <std::string>& names);
     protected:
     private:
         /** @brief The path of the directory PHP scripts */

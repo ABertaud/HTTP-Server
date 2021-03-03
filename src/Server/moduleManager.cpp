@@ -56,7 +56,7 @@ std::shared_ptr<IModule> moduleManager::getNewModule(const moduleType& type)
     return (nullptr);
 }
 
-std::shared_ptr<IModule> &moduleManager::getModule(const moduleType& type)
+std::shared_ptr<IModule>& moduleManager::getModule(const moduleType& type)
 {
     for (auto& module : _modules)
         if (module->getModuleType() == type)

@@ -29,7 +29,7 @@ class requestManager {
             *  @param cgiPath Exact path to the dir where CGI scripts are stocked
             *  @param processList Class processingList
         */
-        void reload(std::unordered_map<moduleType, std::string>& modulePaths, const processingList &processList, const std::string& cgiPath);
+        void reload(std::unordered_map<moduleType, std::string>& modulePaths, const processingList& processList, const std::string& cgiPath);
         /** @brief This function will copy the moduleManager to stock it
             *  @param modManager Class moduleManager
         */

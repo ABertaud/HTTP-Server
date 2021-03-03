@@ -16,10 +16,10 @@ class OSRedirector {
     private:
         std::ostringstream _oss;
         std::streambuf *_backup;
-        std::ostream &_c;
+        std::ostream& _c;
 
     public:
-        OSRedirector(std::ostream &c) : _c(c) {
+        OSRedirector(std::ostream& c) : _c(c) {
             _backup = _c.rdbuf();
             _c.rdbuf(_oss.rdbuf());
         }
@@ -39,7 +39,7 @@ Test(testPathError, jsonReader)
     try {
         jsonReader jReader("unexistantfile");
     }
-    catch (Error &e) {
+    catch (Error& e) {
         cr_assert(std::strcmp(e.what(), "Error: The given path isn't valid.") == 0);
     }
 }
@@ -64,7 +64,7 @@ Test(testJsonError, jsonReader)
     outfile.close();
     try {
         jsonReader jReader("test.txt");
-    } catch (nlohmann::json::exception const &jsonErr) {
+    } catch (nlohmann::json::exception const& jsonErr) {
         cr_assert(std::strcmp(jsonErr.what(), "[json.exception.parse_error.101] parse error at 146: syntax error - unexpected end of input; expected \'}\'") == 0);
     }
     sleep(1);
@@ -95,7 +95,7 @@ Test(testJsonOutput, jsonReader)
         std::cout << jReader.getJsonFile();
        
         cr_assert_eq(oss.getContent(), "{\"zia\":{\"modules\":[\"PHP CGI\",\"SSL/TSL\",\"Snake\",\"File Server\"]}}");
-    } catch (nlohmann::json::exception const &jsonErr) {
+    } catch (nlohmann::json::exception const& jsonErr) {
     }
     sleep(1);
 }

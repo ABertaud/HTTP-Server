@@ -63,7 +63,7 @@ void requestManager::launchRequest(const std::string& req, boost::asio::ssl::str
     }
 }
 
-void requestManager::reload(std::unordered_map<moduleType, std::string>& modulePaths, const processingList &processList, const std::string& cgiPath)
+void requestManager::reload(std::unordered_map<moduleType, std::string>& modulePaths, const processingList& processList, const std::string& cgiPath)
 {
     _modManager.loadLoaders(modulePaths);
     _modManager.loadModules();

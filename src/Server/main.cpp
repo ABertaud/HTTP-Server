@@ -42,7 +42,7 @@ int main(int ac, char **av)
     } catch (Error& e) {
         std::cerr << e.what() << std::endl;
         return (84);
-    } catch (nlohmann::json::exception const &jsonErr) {
+    } catch (nlohmann::json::exception const& jsonErr) {
         std::cout << jsonErr.what();
         return (84);
     } catch(boost::system::system_error& e) {
@@ -54,7 +54,7 @@ int main(int ac, char **av)
     // try {
     //     jsonReader reader(filename);
     //     std::cout << reader.getJsonFile();
-    // } catch (Error const &err) {
+    // } catch (Error const& err) {
     //     std::cout << err.what();
     //     return (84);
 

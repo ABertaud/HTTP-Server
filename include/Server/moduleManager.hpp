@@ -40,7 +40,7 @@ class moduleManager {
             *  @param type Type of the module
             *  @return std::shared_ptr<IModule> Shared pointer to the corresponding module
         */
-        std::shared_ptr<IModule> &getModule(const moduleType& type);
+        std::shared_ptr<IModule>& getModule(const moduleType& type);
         /** @brief This function will load _loaders variable thanks to the map received as param
             *  @param modulePaths Map containing the type of the module and on the other hand containing the exact path to its .so
             *  @return std::shared_ptr<IModule> Shared pointer to the corresponding module
