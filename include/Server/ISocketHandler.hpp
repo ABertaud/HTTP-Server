@@ -22,6 +22,11 @@ class ISocketHandler {
     public:
         /** @brief Dtor of ISocketHandler (virtual cause Interface) */
         virtual ~ISocketHandler() = default;
+        /** @brief This function will prepare the socketHandler to be able to work autonomously
+            *  @param ioContext Context of the accepted connection, needed to create a socket
+            *  @param modManager Class moduleManager
+            *  @param ctx Boost asio ssl context, useful for the ssl certificate
+        */
         virtual void prepareSocketHandler(boost::asio::io_context& ioContext, const moduleManager& modManager, boost::asio::ssl::context& ctx) = 0;
         /** @brief This function will reload the modules and the processing list used by the appropriate ISocketHandler
             *  @param modulePaths Map containing the type of the module and on the other hand containing the exact path to its .so

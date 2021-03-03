@@ -22,9 +22,9 @@ class moduleManager {
         moduleManager();
         /** @brief Dtor of moduleManager */
         ~moduleManager() = default;
-        /** @brief Default copy ctor of moduleManager */
+        /** @brief Copy ctor of moduleManager */
         moduleManager(const moduleManager& other);
-        /** @brief Default overloaded '=' operator of moduleManager */
+        /** @brief Overloaded '=' operator of moduleManager */
         moduleManager& operator=(const moduleManager& other);
         /** @brief This function will check whether the module exists or not
             *  @param type Type of the module
