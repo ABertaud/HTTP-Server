@@ -12,6 +12,149 @@ Here is a class diagram of our API (it is much more complete than the required o
 
 ![Zia Class Diagram](doc/Zia_UML.png)
 
-And here is the API workflow
+## Workflow
 
 ![Zia Workflow](doc/Zia_Workflow.png)
+
+## Config File
+
+The Zia HTTP Server needs a config file to work properly. This file will have to be in the **JSON** format and the path to it will have to be given when launching the server.
+
+```json
+{
+    "zia": {
+        "modules": [
+            "snakeModule"
+        ],
+        "SSL Certificate Path": "./config/SSL/mycert.pem",
+        "CGI Dir Path": "./config/PHP/"
+    }
+}
+```
+
+Here is an example of a basic **JSON** config file with the *snakeModule* as well as the ''SSL Certificate Path'' and the ''CGI Dir Path''
+
+## Build and Launch
+
+In this section we will see how to build the project using *Conan* and *CMake* on **Linux** and **Windows 10**
+
+### Linux Build
+
+#### Prerequisities
+
+To launch the project on a Linux OS you **must** have Conan installed on your machine as well as the conan settings configured for you machine.
+Of course the Packages mentionned in the conanfile.txt have to be installed.
+
+#### How to build Linux
+
+1. Go to the project root and create a `build` directory : `mkdir build`
+2. Then go in that folder : `cd build`
+3. Launch the Conan build command : `conan install .. --build=missing`
+4. Then launch the CMake building command : `cmake .. -G "Unix Makefiles"`
+5. Finally build the project : `cmake --build .`
+6. After that you will find the `zia` executable
+
+### Windows Build
+
+#### Prerequisities
+
+To launch the project on a Windows 10 OS you **must** have the following tools installed : (_check links in the doc section of the README_)
+
+- Visual Studio 16 2019 (_version used: **16.8.1**)_
+- Conan Package Manager  (_version used: **1.31.2**)_
+
+Conan will install for you the following packages _(refer to conafile.txt in root)_
+
+1. Boost _(**1.69**)_
+2. OpenSSL _(**1.1.1a**)_
+3. ZLib _(**1.2.11**)_
+4. BZip2 _(**1.0.6**)_
+5. nlohmann_json _(**3.2.0**)_
+
+#### How to build Windows
+
+1. First of all you might want to install all packages required by launching the following commad : `conan install .. -s compiler="Visual Studio" -s compiler.version=16 -s arch=x86_64 -s build_type=Release --build=missing`
+2. After that create a build folder and get into it : `mkdir build && cd build`
+3. Then launch the CMake build : `cmake .. -G "Visual Studio 16 2019"`
+4. Finally, build the solution file with that command : `cmake --build . --config Release`
+5. After that you will find the `zia.exe` in the`bin` folder and the modules in the lib folder.
+
+### Launch
+
+#### Linux Launch
+
+You will need to specify the path to the config file (**it has to be a json file**) and the path to the module folder
+
+`./build/bin/zia ./config/config.json build/lib/` 
+
+#### Windows Launch
+
+Same as the Linux Launch
+
+`build\bin\zia.exe .\config\config.json .\build\lib`
+
+
+## SSL
+
+The zia HTTP Server contains a SSL Module that be can used to ensure a secure data transfer between the server and the client.
+
+To do so, the server will need a certificate (**.pem**) and in addition the client will also need to have the certificate.
+
+If you need to create a certificate to create to test your own, refer to [this link](https://gist.github.com/cecilemuller/9492b848eb8fe46d462abeb26656c4f8) (you will need to have openSSL installed on your machine).
+
+### How to use your certificate on the Zia Server
+
+To do so you need to add the path to your file in the config file as the `SSL Certificate Path` (check the [Config File](#Config-File) section)
+
+You should put your certificate file in the `config/SSL` folder.
+
+⚠️ The Zia Server will uses the same file path to check both the **key file** and the **chain file**. So make sure they both are in the **.pem** file. ⚠️
+
+### How to test the SSLModule
+
+In order to test the SSLModule and the HTTPS secured connection you will need to have a client that has the certificate. Two methods are available.
+
+#### Use any web browser
+
+You can use almost any web browser to test out our *SSLModule*. The only thing you will have to do is to add the certificate to your browser.
+
+Here is a way to do it on **Google Chrome Browser** (on Windows 10):
+
+1. Go to the page [chrome://settings/security](chrome://settings/security)
+2. Go to the Advanced and `Manage certificates`
+3. A pop up will appear and click on `Import`
+4. Choose the certificate file (**.crt**) and place it into the **Trusted Root Certification Authorities** Certificate Store to ensure a fully fonctionnal browser experience.
+5. After that go to the following url [https://localhost:8084/test](https://localhost:8084/test)
+
+#### Use the *LaunchHTTPSRequest* script
+
+You can use **LaunchHTTPSRequest* bash script to test the HTTPS secure connection. To do so execute it that way: `./scripts/launchHTTPSRequest`
+
+⚠️ **You will need the .pem file** ⚠️ 
+
+Here is the usage:
+
+```
+
+Usage: ./launchHTTPSRequest <type> <port> <pathtocertificate>
+    <type>: Type of client to use:
+        "curl": Curl client with one time request (but many SSL info)
+        "openssl": OpenSSL client with possibility to send several request to server
+    <port>: The port of the server
+<pathtocertificate>: The path to the key and certificate file
+```
+
+Here is a **"openssl"** example so that you can type a full HTTPS Request
+
+````bash
+./launchHTTPSRequest.sh openssl 8084 ./mycert.pem << eof
+GET /snake HTTP/1.1
+Host: localhost:8084
+eof
+````
+
+## Documentation
+
+- [Conan Windows Install](https://docs.conan.io/en/latest/installation.html)
+- [Windows Visual Studio C++ install](https://docs.microsoft.com/fr-fr/cpp/build/vscpp-step-0-installation?view=msvc-160)
+- [Create a localhost SSL certificate](https://gist.github.com/cecilemuller/9492b848eb8fe46d462abeb26656c4f8)

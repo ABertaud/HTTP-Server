@@ -83,11 +83,14 @@ void HTTP::HTTPObject::modifyElemContent(const reqElem& elem, const std::string&
 
 void HTTP::HTTPObject::parseRequest(const std::string& request)
 {
+    std::string newReq;
+
     if (request.empty())
         throw (ErrorBadRequest("Error: Request is empty."));
-    parseStartLine(request);
-    parseHeaders(request);
-    parseBody(request);
+    newReq = decodeRequest(request);
+    parseStartLine(newReq);
+    parseHeaders(newReq);
+    parseBody(newReq);
     if (_startLine["Method"][0].compare("PUT") == 0 || _startLine["Method"][0].compare("PUT") == 0) {
         _params.clear();
         createParamsMap(_body["Body"][0]);
@@ -116,11 +119,27 @@ void HTTP::HTTPObject::createParamsMap(const std::string& strParams)
 
 HTTP::paramsMap& HTTP::HTTPObject::getParams()
 {
-    // if (_params.count(param) != 0)
-    //     return (_params[param]);
-    // else
-    //     throw ErrorRequestParams("Error: Param was not found");
     return (_params);
+}
+
+std::string HTTP::HTTPObject::decodeRequest(const std::string& request)
+{
+    std::string ret;
+    char ch;
+    std::size_t i = 0;
+    unsigned int j = 0;
+
+    for(; i < request.length(); i++){
+        if (static_cast<int>(request[i]) == '%') {
+            sscanf(request.substr(i+1,2).c_str(), "%x", &j);
+            ch = static_cast<char>(j);
+            ret += ch;
+            i = i+2;
+        }
+        else
+            ret += request[i];
+    }
+    return (ret);
 }
 
 void HTTP::HTTPObject::parseTarget(std::string& target)
@@ -200,7 +219,7 @@ void HTTP::HTTPObject::parseHeaders(const std::string& request)
     std::string key;
 
     if (header.empty())
-        throw ErrorNoHost();
+        throw ErrorBadRequest("Error: No header (bad formatting)");
     header[header.find_last_of('\n')] = '\0';
     _headers["Raw"].push_back(header);
     strs = strToStringVector(header, "\n");

@@ -121,6 +121,11 @@ namespace HTTP {
              */
             HTTP::reqType& operator[](const HTTP::reqElem& elem);
         public:
+            /** @brief This function will decode the request received from the client before parsing it
+             *  @param request std::string The request as a std::string
+             *  @return std::string Will return the decoded request as a std::string
+             */
+            std::string decodeRequest(const std::string& request);
             /** @brief This function will check if the given key exists in the given reqType
              *  @param elem The type of reqElem (STARTLINE, HEADERS, BODY)
              *  @param key The key to verify

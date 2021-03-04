@@ -7,7 +7,9 @@ set(SRCS_SERVER_DIR ${PROJECT_SOURCE_DIR}/src/Server)
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 find_package(Threads)
-link_libraries(stdc++fs)
+if (UNIX)
+    link_libraries(stdc++fs)
+endif()
 
 # -------------------------------- SERVER SOURCES -------------------------------- #
 set(SRCS_SERVER ${SRCS_SERVER_DIR}/main.cpp
