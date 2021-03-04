@@ -15,6 +15,8 @@
 #include "SignalHandler.hpp"
 #include "configHandler.hpp"
 #include "INetwork.hpp"
+#include <filesystem>
+#include <chrono>
 
 /** @class serverCore
     * @brief The serverCore manages the acceptance of connections, and give to the sockerHandlers the necessary information
@@ -38,6 +40,10 @@ class serverCore : public INetwork {
         /** @brief Dtor of serverCore */
         ~serverCore() = default;
     private:
+        /** @brief Check if the way to handle socket has been changed, this function must be call before the call reload of Json File in order to save, and then recalled to update the way to handle sockets if needed.
+            * @param before True if it's called before the reload of Json, else False 
+        */
+        void checkSocketChanges(const bool before);
         /** @brief Start connection's network functionality */
         void startAccept();
         /** @brief This function will be the callback called after each acceptance on the acceptor
@@ -61,7 +67,7 @@ class serverCore : public INetwork {
         /** @brief Boost asio ssl context, useful for the ssl certificate */
         boost::asio::ssl::context _ctx;
         /** @brief Date of the last update of the config file */
-        std::time_t _lastUpdate;
+        std::chrono::time_point<std::filesystem::__file_clock> _lastUpdate;
         /** @brief configHandler class */
         configHandler _confHandler;
         /** @brief moduleManager class */

@@ -7,7 +7,6 @@
 
 #include "serverCore.hpp"
 #include "tcpConnection.hpp"
-#include <boost/filesystem/operations.hpp>
 
 
 serverCore::serverCore(boost::asio::io_context& ioContext, const std::string& configPath, const std::string& dirPath) :
@@ -15,10 +14,11 @@ _acceptor(ioContext, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), 
 _confHandler(_paths)
 {
     _modManager.loadLoaders(_confHandler.getListModules());
-    boost::filesystem::path p(_paths.configPath);
-    if (boost::filesystem::exists(p))
-        _lastUpdate = boost::filesystem::last_write_time(p);
-    else
+    std::filesystem::path p(_paths.configPath);
+    if (std::filesystem::exists(p)){
+        auto ftime = std::filesystem::last_write_time(p);
+        _lastUpdate = ftime;
+    } else
         throw ErrorConfigPath();
     _t.async_wait(boost::bind(&serverCore::serverEndHandler, this, _paths.configPath, boost::asio::placeholders::error));
     _ctx.set_options(
@@ -74,21 +74,39 @@ void serverCore::start()
     _acceptor.get_io_service().run();
 }
 
+void serverCore::checkSocketChanges(const bool before)
+{
+    static moduleType save = moduleType::NONE;
+
+    if (before == true) {
+        if (_modManager.doesLoaderExist(moduleType::SSL_MODULE))
+            save = moduleType::SSL_MODULE;
+        else
+            save = moduleType::NONE;
+    } else {
+        if ((_modManager.doesLoaderExist(moduleType::SSL_MODULE) && save == moduleType::NONE) || (_modManager.doesLoaderExist(moduleType::SSL_MODULE) == false && save == moduleType::SSL_MODULE)) {
+            for (auto& sock : _sockHandlers) 
+                sock->killSocket();
+            _sockHandlers.clear();
+        }
+    }
+}
+
 void serverCore::serverEndHandler(const std::string& configPath, const boost::system::error_code& err)
 {
     if (err)
         return;
-    boost::filesystem::path p(configPath);
-    if (boost::filesystem::exists(p)) {
-        if (_lastUpdate != boost::filesystem::last_write_time(p)) {
+    checkSocketChanges(true);
+    std::filesystem::path p(configPath);
+    if (std::filesystem::exists(p)) {
+        auto ftime = std::filesystem::last_write_time(p);
+        if (_lastUpdate != ftime) {
             _confHandler.reload();
+            _modManager.loadLoaders(_confHandler.getListModules());
+            checkSocketChanges(false);
             for (auto& sock : _sockHandlers) 
                 sock->reload(_confHandler.getListModules(), _confHandler.getCgiPath(), _confHandler.getCopyProcessList());
-            // if (_modManager.doesModuleExist(moduleType::PHPCGI))
-            //     _modManager.getModule(moduleType::PHPCGI)->init(_confHandler.getCgiPath());
-            // if (_reqManager.doesModuleExist(moduleType::SSL_MODULE))
-            //     _reqManager.getModule(moduleType::SSL_MODULE)->init(_confHandler.getCertificatePath(), _socket);
-            _lastUpdate = boost::filesystem::last_write_time(p);
+            _lastUpdate = ftime;
         }
     } else
         throw ErrorConfigPath();

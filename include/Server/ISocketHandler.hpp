@@ -18,7 +18,7 @@
 /** @class ISocketHandler
     *  @brief The ISocketHandler class is an interface class that gather common methods between all class considered as socketHandlers
 */
-class ISocketHandler {
+class ISocketHandler : public std::enable_shared_from_this<ISocketHandler> {
     public:
         /** @brief Dtor of ISocketHandler (virtual cause Interface) */
         virtual ~ISocketHandler() = default;
@@ -40,8 +40,19 @@ class ISocketHandler {
             * @return boost::asio::basic_socket<boost::asio::ip::tcp> The lowest layer of a tcp socket
         */
         virtual boost::asio::basic_socket<boost::asio::ip::tcp>& getSocket() = 0;
-    private:
-    protected:
+        /** @brief This function notifies the socket that it is destroyed from the server */
+        virtual void killSocket() = 0;
+        /** @brief This function closes the socket manually */
+        virtual void close() = 0;
+        /** @brief This function will be the callback called after each read on the socket
+            *  @param err It contains the value of the potential error, false if there is no error
+            *  @param bytesTransferred It contains the number of bytes that has been readed
+        */
+        virtual void handleRead(const boost::system::error_code& err, size_t bytesTransferred) = 0;
+        /** @brief This functions will start the ssl handshake
+            *  @param err It contains the value of the potential error, false if there is no error
+        */
+        virtual void handleHandshake(const boost::system::error_code& error) = 0;
     private:
 };
 

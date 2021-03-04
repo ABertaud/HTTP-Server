@@ -42,6 +42,10 @@ class Snake : public IModule {
             *  @return moduleType Type of module
         */
         moduleType getModuleType() const;
+        /** @brief This function will put the whole string in upper case
+            *  @return String to update
+        */
+        void upperCase(std::string& str);
         /** @brief Default copy ctor of Snake */
         Snake(const Snake& other) = default;
         /** @brief Default overloaded '=' operator of Snake */

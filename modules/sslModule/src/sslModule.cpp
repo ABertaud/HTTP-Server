@@ -35,9 +35,13 @@ void sslModule::prepareSocketHandler(boost::asio::io_context& ioContext, const m
 void sslModule::start()
 {
     std::memset(_data, '\0', BUFFER_SIZE);
+    auto this_shared = shared_from_this();
     _socket->async_handshake(boost::asio::ssl::stream_base::server,
-    boost::bind(&sslModule::handleHandshake, this,
-    boost::asio::placeholders::error));
+    [=](const boost::system::error_code& err)
+        {
+            this_shared->handleHandshake(err);
+        }
+    );
 }
 
 boost::asio::basic_socket<boost::asio::ip::tcp>& sslModule::getSocket()
@@ -49,16 +53,18 @@ void sslModule::handleHandshake(const boost::system::error_code& error)
 {
     if (!error) {
         std::cout << "Handshake Done!" << std::endl;
-        _socket->async_read_some(boost::asio::buffer(_data, 1024),
-            boost::bind(&sslModule::handleRead, this,
-            boost::asio::placeholders::error,
-            boost::asio::placeholders::bytes_transferred));
+        auto this_shared = shared_from_this();
+        _socket->async_read_some(boost::asio::buffer(_data, BUFFER_SIZE),
+        [=](const boost::system::error_code& err, size_t bytesTransferred)
+            {
+                this_shared->handleRead(err, bytesTransferred);
+            }
+        );
     }
     else {
         std::cout << "Session ended ..." << std::endl;
         if (this) {
-            // _socket->shutdown();
-            _socket->lowest_layer().close();
+            close();
         }
     }
 }
@@ -66,15 +72,21 @@ void sslModule::handleHandshake(const boost::system::error_code& error)
 void sslModule::reset(void)
 {
     std::memset(_data, '\0', BUFFER_SIZE);
+    auto this_shared = shared_from_this();
     _socket->async_read_some(boost::asio::buffer(_data, BUFFER_SIZE),
-        boost::bind(&sslModule::handleRead, this,
-        boost::asio::placeholders::error,
-        boost::asio::placeholders::bytes_transferred));
+    [=](const boost::system::error_code& err, size_t bytesTransferred)
+        {
+            this_shared->handleRead(err, bytesTransferred);
+        }
+    );
 }
 
-void sslModule::handleRead(const boost::system::error_code& err, size_t bytesTransferred)
+void sslModule::handleRead(const boost::system::error_code& err, [[maybe_unused]] size_t bytesTransferred)
 {
-    (void)bytesTransferred;
+    if (_alive == false) {
+        close();
+        return;
+    }
     if (!err) {
         std::string req(_data);
         if (req.empty()) {
@@ -90,9 +102,14 @@ void sslModule::handleRead(const boost::system::error_code& err, size_t bytesTra
         reset();
     } else {
         std::cerr << "error: " << err.message() << std::endl;
-        // _socket->shutdown();
-        _socket->lowest_layer().close();
+        close();
     }
+}
+
+void sslModule::close()
+{
+    if (_socket->lowest_layer().is_open() == true)
+        _socket->lowest_layer().close();
 }
 
 #if defined (_WIN32)

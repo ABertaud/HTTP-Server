@@ -24,6 +24,20 @@ moduleManager& moduleManager::operator=(const moduleManager& other)
 
 void moduleManager::loadLoaders(std::unordered_map<moduleType, std::string>& modulePaths)
 {
+    if (_loaders.size() != 0) {
+        // for (auto load : _loaders) {
+        //     if (modulePaths.count(load.first) == 0)
+        //         removeLoader(load.first);
+        // }
+        for (auto load = _loaders.begin(); load != _loaders.end(); load++) {
+            if (modulePaths.count(load->first) == 0) {
+                removeLoader(load->first);
+                load = _loaders.begin();
+                if (load == _loaders.end())
+                    break;
+            }
+        }
+    }
     for (auto& path : modulePaths) {
         if (_loaders.count(path.first) == 0)
             _loaders.insert(std::make_pair(path.first, std::shared_ptr<DLLoader>{new DLLoader(path.second)}));
@@ -56,7 +70,7 @@ std::shared_ptr<IModule> moduleManager::getNewModule(const moduleType& type)
     return (nullptr);
 }
 
-std::shared_ptr<IModule>& moduleManager::getModule(const moduleType& type)
+std::shared_ptr<IModule> &moduleManager::getModule(const moduleType& type)
 {
     for (auto& module : _modules)
         if (module->getModuleType() == type)
@@ -66,9 +80,22 @@ std::shared_ptr<IModule>& moduleManager::getModule(const moduleType& type)
 
 void moduleManager::loadModules()
 {
+    for (auto module = _modules.begin(); module !=  _modules.end(); module++) {
+        if (_loaders.count((*module)->getModuleType()) == 0) {
+            _modules.erase(module);
+            module--;
+        }
+    }
     for (auto& load : _loaders) {
         if (doesModuleExist(load.first) == false) {
             _modules.push_back(load.second->getInstance<IModule>("entryPoint"));
         }
+    }
+}
+
+void moduleManager::removeLoader(const moduleType& type)
+{
+    if (_loaders.find(type) != _loaders.end()) {
+        _loaders.erase(type);
     }
 }

@@ -7,8 +7,13 @@
 
 #include "ASocketHandler.hpp"
 
-ASocketHandler::ASocketHandler()
+ASocketHandler::ASocketHandler() : _alive(true)
 {
+}
+
+void ASocketHandler::killSocket()
+{
+    _alive = false;
 }
 
 void ASocketHandler::reload(std::unordered_map<moduleType, std::string>& modulePaths, const std::string& cgiPath, const processingList& processList)

@@ -6,7 +6,7 @@
 */
 
 #include "pathHandler.hpp"
-#include "boost/filesystem.hpp"
+#include <filesystem>
 
 pathHandler::pathHandler(const pathType& type)
 {
@@ -18,12 +18,12 @@ pathHandler::pathHandler(const pathType& type)
 
 bool pathHandler::isDirValid() const
 {
-    return (boost::filesystem::is_directory(_path));
+    return (std::filesystem::is_directory(_path));
 }
 
 bool pathHandler::isFileValid() const
 {
-    return (boost::filesystem::is_regular_file(_path));
+    return (std::filesystem::is_regular_file(_path));
 }
 
 void pathHandler::setPath(const std::string& path)

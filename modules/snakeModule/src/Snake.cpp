@@ -6,7 +6,6 @@
 */
 
 #include "Snake.hpp"
-#include <boost/algorithm/string.hpp>
 #include <memory>
 #include <iostream>
 
@@ -26,7 +25,7 @@ Snake::Snake(): _snakeCoord(Coord(0, 0)), _eatenApples(0)
 void Snake::processRequest(HTTP::HTTPObject& req)
 {
     std::string method = req[HTTP::STARTLINES]["Method"][0];
-    boost::to_upper(method);
+    upperCase(method);
     for (auto& met : _methods)
         if (met.first == method)
             (this->*(met.second))(req);
@@ -90,7 +89,7 @@ void Snake::put(HTTP::HTTPObject& req)
     }
     if (params.find("arrow") != params.end()) {
         auto& param = params["arrow"];
-        boost::to_upper(param);
+        upperCase(param);
         for (auto& move : _movements)
             if (move.first == param) {
                 valid = true;
@@ -140,6 +139,11 @@ Coord Snake::getApplePos() const
 unsigned int Snake::getEatenApples() const
 {
     return (_eatenApples);
+}
+
+void Snake::upperCase(std::string& str)
+{
+    for (auto& c: str) c = toupper(c);
 }
 
 #if defined (_WIN32)

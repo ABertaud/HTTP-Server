@@ -31,6 +31,8 @@ class ASocketHandler : public ISocketHandler {
         ASocketHandler& operator=(const ASocketHandler& other) = default;
         /** @brief Dtor of ASocketHandler (virtual cause Abstract) */
         virtual ~ASocketHandler() = default;
+        /** @brief This function notifies the socket that it is destroyed from the server */
+        void killSocket();
     protected:
         /** @brief String to send */
         std::string _message;
@@ -38,12 +40,9 @@ class ASocketHandler : public ISocketHandler {
         requestManager _reqManager;
         /** @brief Buffer that will be filled each time someone writes on our socket. BUFFER_SIZE corresponds to the size that the buffer will have allocated */
         char _data[BUFFER_SIZE];
+        /** @brief Bool to know whether the socket has been destroyed by the server or not */
+        bool _alive;
     private:
-        /** @brief This function will be the callback called after each read on the socket
-            *  @param err It contains the value of the potential error, false if there is no error
-            *  @param bytesTransferred It contains the number of bytes that has been readed
-        */
-        virtual void handleRead(const boost::system::error_code& err, size_t bytesTransferred) = 0;
 };
 
 

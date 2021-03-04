@@ -31,6 +31,17 @@ class tcpConnection : public ASocketHandler {
             * @return boost::asio::basic_socket<boost::asio::ip::tcp> The lowest layer of a tcp socket
         */
         boost::asio::basic_socket<boost::asio::ip::tcp>& getSocket();
+        /** @brief This function closes the socket manually */
+        void close();
+        /** @brief This function will be the callback called after each read on the socket
+            *  @param err It contains the value of the potential error, false if there is no error
+            *  @param bytesTransferred It contains the number of bytes that has been readed
+        */
+        void handleRead(const boost::system::error_code& err, size_t bytesTransferred);
+        /** @brief This functions will start the ssl handshake
+            *  @param err It contains the value of the potential error, false if there is no error
+        */
+        void handleHandshake(const boost::system::error_code& error);
         /** @brief Default copy ctor of tcpConnection */
         tcpConnection(const tcpConnection& other) = default;
         /** @brief Default overloaded '=' operator of tcpConnection */
@@ -38,11 +49,6 @@ class tcpConnection : public ASocketHandler {
         /** @brief Dtor of tcpConnection */
         ~tcpConnection() = default;
     private:
-        /** @brief This function will be the callback called after each read on the socket
-            *  @param err It contains the value of the potential error, false if there is no error
-            *  @param bytesTransferred It contains the number of bytes that has been readed
-        */
-        void handleRead(const boost::system::error_code& err, size_t bytesTransferred);
         /** @brief Shared pointer of a boost asio tcp socket */
         std::shared_ptr<boost::asio::ip::tcp::socket> _socket;
 };
