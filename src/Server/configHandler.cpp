@@ -13,8 +13,9 @@ _modulePaths(), _paths(), _certificatePath(), _CgiDir()
 {
     std::string pathDirclean;
     _fileErr.open(paths.configPath);
-    if (!_fileErr)
-        throw ErrorConfigPath();
+    if (!_fileErr) {
+        defaultfile();
+    }
     if (paths.dirPath.back() != '/') {
         pathDirclean = paths.dirPath + "/";
         _paths.dirPath = pathDirclean;
@@ -26,13 +27,13 @@ _modulePaths(), _paths(), _certificatePath(), _CgiDir()
     throw err;
 }
 
-void configHandler::fileExists(const std::filesystem::path& p)
+bool configHandler::fileExists(const std::filesystem::path& p)
 {
     std::filesystem::file_status s = std::filesystem::file_status{};
     if(std::filesystem::status_known(s) ? std::filesystem::exists(s) : std::filesystem::exists(p))
-        return;
+        return false;
     else
-        throw ErrorConfigPhpFile();
+        return true;
 }
 
 int configHandler::nthOccurrence(const std::string& str, const std::string& findMe, int nth)
@@ -50,7 +51,7 @@ int configHandler::nthOccurrence(const std::string& str, const std::string& find
     return pos;
 }
 
-void configHandler::checkTag(std::string line)
+bool configHandler::checkTag(std::string line)
 {
     std::string tag = line;
     std::string path = line;
@@ -60,16 +61,17 @@ void configHandler::checkTag(std::string line)
     int foundPath_s = nthOccurrence(line, "\"", 4) - foundPath;
         
     if (foundTag < 0 || foundTag_s < 0 || foundPath < 0 || foundPath_s < 0)
-        return;
+        return false;
     tag = tag.substr((size_t)foundTag, (size_t)foundTag_s);
     path = path.substr((size_t)foundPath, (size_t)foundPath_s);
     if (tag == "SSL Certificate Path") {
         _certificatePath = path;
-        fileExists(_certificatePath);
+        return fileExists(_certificatePath);
     } else if (tag == "CGI Dir Path") {
         _CgiDir = path;
-        fileExists(_CgiDir);
+        return fileExists(_CgiDir);
     }
+    return false;
 }
 
 void configHandler::load()
@@ -84,7 +86,7 @@ void configHandler::load()
 
     try {
         while (std::getline(jsonFile, line, '\n')) {
-            checkTag(line);
+            defaultCheck = checkTag(line);
             if (line.find("\"") != std::string::npos) {
                 if (PosModule == true) {
                     name = getName(line);

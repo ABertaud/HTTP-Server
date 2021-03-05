@@ -63,18 +63,22 @@ class configHandler
         /** @brief This function will check if the file exist
         *   @param p the path of the file
         */
-        void fileExists(const std::filesystem::path& p);
+        bool fileExists(const std::filesystem::path& p);
         /** @brief This function will check the tag of the configfile
         *   @param line one line of the configfile
         */
-        void checkTag(std::string line);
+        bool checkTag(std::string line);
         /** @brief This function will give the position of the n char
         *   @param str the string where the char is
         *   @param findMe the char to found
         *   @param nth the n char to found
         */
         int nthOccurrence(const std::string& str, const std::string& findMe, int nth);
+        /** @brief This function will load the modules with a default path*/
         void defaultfile();
+        /** @brief This function will check if the file exist and will send false if he exist and true if not
+        *   @param line one line of the configfile
+        */
         bool fexists(const std::string& filename);
     
     public:
