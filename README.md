@@ -85,14 +85,13 @@ Conan will install for you the following packages _(refer to conafile.txt in roo
 
 You will need to specify the path to the config file (**it has to be a json file**) and the path to the module folder
 
-`./build/bin/zia ./config/config.json build/lib/` 
+`./build/bin/zia ./config/config.json build/lib/`
 
 #### Windows Launch
 
 Same as the Linux Launch
 
 `build\bin\zia.exe .\config\config.json .\build\lib`
-
 
 ## SSL
 
@@ -130,7 +129,7 @@ Here is a way to do it on **Google Chrome Browser** (on Windows 10):
 
 You can use **LaunchHTTPSRequest* bash script to test the HTTPS secure connection. To do so execute it that way: `./scripts/launchHTTPSRequest`
 
-⚠️ **You will need the .pem file** ⚠️ 
+⚠️ **You will need the .pem file** ⚠️
 
 Here is the usage:
 
@@ -147,10 +146,79 @@ Usage: ./launchHTTPSRequest <type> <port> <pathtocertificate>
 Here is a **"openssl"** example so that you can type a full HTTPS Request
 
 ````bash
+
 ./launchHTTPSRequest.sh openssl 8084 ./mycert.pem << eof
 GET /snake HTTP/1.1
 Host: localhost:8084
 eof
+````
+
+## Add a Custom Module
+
+The Zia server is a customizable server where you can add modules. In order to do so, you will have to create a Class that will inherit from IModule.
+
+First thing you will need to do is to create a folder for your module in the `./modules` directory and add a corresponding CMakeList.txt in that folder.
+
+⚠️ You will also need to add the subdirectory into the `./modules` CMakeList.txt. `add_subdirectory(myModule)` ⚠️
+
+Here are the methods that you will have to reimplement:
+
+````cpp
+
+class IModule {
+    public:
+        /** @brief Dtor of IModule (virtual cause Interface) */
+        virtual ~IModule() = default;
+        /** @brief This function will be called each time a request is received
+            *  @param req HTTPObject class filled with request's information
+        */
+        virtual void processRequest(HTTP::HTTPObject& req) = 0;
+        /** @brief This function will be called for each module after its creation
+            *  @param path Needed path for the right operation of the module (optional)
+        */
+        virtual void init(const std::string& path) = 0;
+        /** @brief This function will return the moduleType of the current instance of IModule
+            *  @return moduleType Type of module
+        */
+        virtual moduleType getModuleType() const = 0;
+};
+````
+
+Your Module class will also need to have an `export "C"` method that will be used to create the *.so* (Linux) or the *.lib* (Windows).
+
+Here is what you have to put in your module *.cpp* file:
+
+````cpp
+#if defined (_WIN32)
+  
+    extern "C"  __declspec(dllexport)
+    void *entryPoint()
+    {
+        return (new std::shared_ptr<myModule>(new myModule));
+    }
+
+#else
+
+    extern "C" std::shared_ptr<IModule> entryPoint()
+    {
+        return (std::make_shared<myModule>());
+    }
+
+#endif
+````
+
+Finally if you want to add your module to the server, add the name of your module to the config file like so:
+
+````json
+{
+    "zia": {
+        "modules": [
+            "myModule"
+        ],
+        "SSL Certificate Path": "./config/SSL/mycert.pem",
+        "CGI Dir Path": "./config/PHP/"
+    }
+}
 ````
 
 ## Documentation
