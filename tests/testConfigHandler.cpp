@@ -23,8 +23,7 @@ Test(testPathSoError, configHandler)
         "        \"modules\": [\n",
         "            \"libphpCgiModulett\",\n",
         "            \"sslModule\",\n",
-        "            \"libsnakeModule\",\n",
-        "            \"file_Server\"\n",
+        "            \"libsnakeModule\"\n",
         "        ]\n",
         "    }\n",
         "}",
@@ -40,7 +39,7 @@ Test(testPathSoError, configHandler)
         configHandler configHand(paths);
     }
     catch (Error& e) {
-        cr_assert(std::strcmp(e.what(), "Error config file: one module name doesn't exist") == 0);
+        cr_assert(std::strcmp(e.what(), "Error config file: the default config is not correct") == 0);
     }
     sleep(1);
 }
@@ -70,7 +69,7 @@ Test(TestTagErr, configHandler)
         configHandler configHand(paths);
     }
     catch (Error& e) {
-        cr_assert(std::strcmp(e.what(), "Error config file: one module name doesn't exist") == 0);
+        cr_assert(std::strcmp(e.what(), "Error config file: the default config is not correct") == 0);
     }
     sleep(1);
 }
@@ -84,8 +83,7 @@ Test(TestAllGood, configHandler)
         "        \"modules\": [\n",
         "            \"phpCgiModule\",\n",
         "            \"sslModule\",\n",
-        "            \"snakeModule\",\n",
-        "            \"file_Server\"\n",
+        "            \"snakeModule\"\n",
         "        ]\n",
         "    }\n",
         "}",
@@ -97,8 +95,6 @@ Test(TestAllGood, configHandler)
     sslSo.close();
     std::ofstream snakeSo ("FileSo/libsnakeModule.so");
     snakeSo.close();
-    std::ofstream serverSo ("FileSo/libfile_Server.so");
-    serverSo.close();
     std::ofstream outfile ("test.txt");
     std::unordered_map<moduleType, std::string> modulePaths;
     for (int index = 0; tab[index].length() != 0; index++)
@@ -127,8 +123,7 @@ Test(TestgetModule, configHandler)
         "        \"modules\": [\n",
         "            \"phpCgiModule\",\n",
         "            \"sslModule\",\n",
-        "            \"snakeModule\",\n",
-        "            \"file_Server\"\n",
+        "            \"snakeModule\"\n",
         "        ]\n",
         "    }\n",
         "}",
@@ -140,8 +135,6 @@ Test(TestgetModule, configHandler)
     sslSo.close();
     std::ofstream snakeSo ("FileSo/libsnakeModule.so");
     snakeSo.close();
-    std::ofstream serverSo ("FileSo/libfile_Server.so");
-    serverSo.close();
     std::ofstream outfile ("test.txt");
     for (int index = 0; tab[index].length() != 0; index++)
         outfile << tab[index];
@@ -172,8 +165,7 @@ Test(TestgetProcess, configHandler)
         "        \"modules\": [\n",
         "            \"phpCgiModule\",\n",
         "            \"sslModule\",\n",
-        "            \"snakeModule\",\n",
-        "            \"file_Server\"\n",
+        "            \"snakeModule\"\n",
         "        ]\n",
         "    }\n",
         "}",
@@ -185,8 +177,6 @@ Test(TestgetProcess, configHandler)
     sslSo.close();
     std::ofstream snakeSo ("FileSo/libsnakeModule.so");
     snakeSo.close();
-    std::ofstream serverSo ("FileSo/libfile_Server.so");
-    serverSo.close();
     std::ofstream outfile ("test.txt");
     for (int index = 0; tab[index].length() != 0; index++)
         outfile << tab[index];
@@ -198,7 +188,7 @@ Test(TestgetProcess, configHandler)
         configHandler configHand(paths);
         processingList processList = configHand.getCopyProcessList();
         size = processList.getSize();
-        cr_assert_eq(size, 4);
+        cr_assert_eq(size, 3);
     }
     catch (Error& e) {
     }

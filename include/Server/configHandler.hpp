@@ -51,7 +51,7 @@ class configHandler
         /** @brief This function will add the module path on the _modulePaths and the name of the modue on the _processList
         *   @param line one line of the configfile
         */
-        void addModuleJson(const std::string& name);
+        bool addModuleJson(const std::string& name);
         /** @brief This function will check the tag in the configfile
         *   @param line one line of the configfile
         */
@@ -74,7 +74,9 @@ class configHandler
         *   @param nth the n char to found
         */
         int nthOccurrence(const std::string& str, const std::string& findMe, int nth);
-
+        void defaultfile();
+        bool fexists(const std::string& filename);
+    
     public:
         /** @brief Ctor of configHandler
         *  @param paths struct with the filepath of the directory containing the shared library and the path corresponds to the exact filepath to the config file 

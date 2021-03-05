@@ -171,4 +171,13 @@ class ErrorConfigPhpFile : public ErrorConfigFile
         ErrorConfigPhpFile& operator=(const ErrorConfigPhpFile& other) = default;
         ~ErrorConfigPhpFile() = default;
 };
+
+class ErrorConfigDefault : public ErrorConfigFile
+{
+    public:
+        ErrorConfigDefault();
+        ErrorConfigDefault(const ErrorConfigDefault& other) = default;
+        ErrorConfigDefault& operator=(const ErrorConfigDefault& other) = default;
+        ~ErrorConfigDefault() = default;
+};
 #endif /* !ERROR_HPP_ */

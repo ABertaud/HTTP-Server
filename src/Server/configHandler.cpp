@@ -80,6 +80,7 @@ void configHandler::load()
     bool PosModule = false;
     std::ifstream jsonFile(_paths.configPath);
     size_t endModule = std::string::npos;
+    bool defaultCheck = false;
 
     try {
         while (std::getline(jsonFile, line, '\n')) {
@@ -87,7 +88,7 @@ void configHandler::load()
             if (line.find("\"") != std::string::npos) {
                 if (PosModule == true) {
                     name = getName(line);
-                    addModuleJson(name);
+                    defaultCheck = addModuleJson(name);
                 }
                 if (checktagModule(line) == true)
                     PosModule = true;
@@ -95,7 +96,11 @@ void configHandler::load()
             endModule = line.find("]");
             if (PosModule == true && endModule != std::string::npos)
                PosModule = false;
+            if (defaultCheck == true)
+                break;
         }
+        if (defaultCheck == true)
+            defaultfile();
     } catch (Error const& err) {
         throw err;
     }
@@ -144,21 +149,51 @@ bool configHandler::checktagModule(std::string& line)
     return false;
 }
 
+bool configHandler::fexists(const std::string& filename)
+{
+  std::ifstream ifile(filename);
+  return ifile.good();
+}
 
-void configHandler::addModuleJson(const std::string& name)
+void configHandler::defaultfile()
+{
+    std::vector <std::string> defaultPaths;
+    std::string paths;
+
+    _modulePaths.clear();
+    _processList.clear();
+    _certificatePath = "";
+    _CgiDir = "";
+    for (auto it= _moduleType.begin(); it != _moduleType.end(); ++it) {
+        paths = "build/lib/lib" + it->first + ".so";
+        defaultPaths.push_back(paths);
+    }
+    for (std::vector<std::string>::iterator it = defaultPaths.begin(); it != defaultPaths.end(); it++) {
+        if (fexists(*it) == false) {
+            throw ErrorConfigDefault();
+            return;
+        }
+    }
+    for (auto it= _moduleType.begin(); it != _moduleType.end(); ++it) {
+        paths = "build/lib/lib" + it->first + ".so";
+        _modulePaths.insert({it->second, paths});
+        _processList.add(it->second);
+    }
+    _certificatePath = "config/SSL/mycert.pem";
+    _CgiDir = "config/PHP/";
+}
+
+bool configHandler::addModuleJson(const std::string& name)
 {
     std::string path = _paths.dirPath + "lib" + name + ".so";
-    if (_moduleType.find(name) == _moduleType.end()) {
-        throw ErrorConfigTag();
-        return;
-    }
+    if (_moduleType.find(name) == _moduleType.end())
+        return true;
     std::ifstream infile(path);
-    if (infile.good() == false) {
-        throw ErrorConfigSo();
-        return;
-    }
+    if (infile.good() == false)
+        return true;
     _modulePaths.insert({_moduleType.find(name)->second, path});
     _processList.add(_moduleType.find(name)->second);
+    return false;
 }
 
 void configHandler::reload()

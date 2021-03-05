@@ -2,7 +2,7 @@
     "zia": {
         "modules": [
             "phpCgiModule",
-            "sslModule",
+            "sslModusqdle",
             "snakeModule"
         ],
         "SSL Certificate Path": "../config/SSL/mycert.pem",

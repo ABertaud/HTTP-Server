@@ -80,3 +80,7 @@ ErrorConfigSo::ErrorConfigSo() : ErrorConfigFile("Error config file: one module 
 ErrorConfigPhpFile::ErrorConfigPhpFile() : ErrorConfigFile("Error config file: the config folder is not correct")
 {
 }
+
+ErrorConfigDefault::ErrorConfigDefault() : ErrorConfigFile("Error config file: the default config is not correct")
+{
+}
