@@ -119,11 +119,11 @@ void phpCgiModule::init(const std::string& path)
 
 std::string phpCgiModule::exec(const std::string& cmd) 
 {
-#if defined (_WIN32)
-    std::cout << "windows" << std::endl;
-#else
-    _linuxExec.exec(cmd);
-#endif
+    #if defined (_WIN32)
+        return (_windowsExec.exec(cmd));
+    #else
+        return (_linuxExec.exec(cmd));
+    #endif
 
 }
 

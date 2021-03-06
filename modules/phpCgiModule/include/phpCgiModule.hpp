@@ -10,6 +10,7 @@
 
 #include "IModule.hpp"
 #include "LinuxCmdExec.hpp"
+#include "WindowsCmdExec.hpp"
 #include <fstream>
 #include <memory>
 #include <filesystem>
@@ -77,6 +78,7 @@ class phpCgiModule : public IModule {
         */
         void setExecBody(const std::string& output, HTTP::HTTPObject& req);
         LinuxCmdExec _linuxExec;
+        WindowsCmdExec _windowsExec;
 };
 
 
