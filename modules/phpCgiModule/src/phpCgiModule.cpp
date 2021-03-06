@@ -119,15 +119,12 @@ void phpCgiModule::init(const std::string& path)
 
 std::string phpCgiModule::exec(const std::string& cmd) 
 {
-    std::array<char, 128> buffer;
-    std::string result;
-    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd.c_str(), "r"), pclose);
-    if (!pipe)
-        return std::string("popen() failed!");
-    while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr) {
-        result += buffer.data();
-    }
-    return result;
+#if defined (_WIN32)
+    std::cout << "windows" << std::endl;
+#else
+    _linuxExec.exec(cmd);
+#endif
+
 }
 
 moduleType phpCgiModule::getModuleType() const

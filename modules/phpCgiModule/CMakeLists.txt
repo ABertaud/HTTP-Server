@@ -18,6 +18,8 @@ set(SRCS_SERVER ${SRCS_SERVER_DIR}/Error.cpp
 
 # -------------------------------- PHPCGIMODULE SOURCES -------------------------------- #
 set(SRCS ${SRCS_DIR}/phpCgiModule.cpp
+         ${SRCS_DIR}/LinuxCmdExec.cpp
+
 )
 
 # Create shared library

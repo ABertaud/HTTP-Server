@@ -9,6 +9,7 @@
 #define PHPCGIMODULE_HPP_
 
 #include "IModule.hpp"
+#include "LinuxCmdExec.hpp"
 #include <fstream>
 #include <memory>
 #include <filesystem>
@@ -75,6 +76,7 @@ class phpCgiModule : public IModule {
         *  @param request send by the server, that will contain all information
         */
         void setExecBody(const std::string& output, HTTP::HTTPObject& req);
+        LinuxCmdExec _linuxExec;
 };
 
 
