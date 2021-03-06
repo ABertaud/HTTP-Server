@@ -20,6 +20,7 @@ set(SRCS_SERVER ${SRCS_SERVER_DIR}/jsonReader.cpp
                 ${SRCS_SERVER_DIR}/configHandler.cpp
                 ${SRCS_SERVER_DIR}/SignalHandler.cpp
                 ${INCLUDES_PHPCGI_DIR}/src/phpCgiModule.cpp
+                ${INCLUDES_PHPCGI_DIR}/src/LinuxCmdExec.cpp
                 ${SRCS_SERVER_DIR}/moduleManager.cpp
                 ${SRCS_SERVER_DIR}/ASocketHandler.cpp
 )
