@@ -37,7 +37,7 @@ class ASocketHandler : public ISocketHandler {
         /** @brief String to send */
         std::string _message;
         /** @brief requestManager class */
-        requestManager _reqManager;
+        std::shared_ptr<requestManager> _reqManager;
         /** @brief Buffer that will be filled each time someone writes on our socket. BUFFER_SIZE corresponds to the size that the buffer will have allocated */
         char _data[BUFFER_SIZE];
         /** @brief Bool to know whether the socket has been destroyed by the server or not */

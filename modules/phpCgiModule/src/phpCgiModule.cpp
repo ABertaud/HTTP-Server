@@ -14,7 +14,6 @@ phpCgiModule::phpCgiModule() : _path()
     _methods.insert(std::make_pair("helloWorld", &phpCgiModule::helloWorld));
     _methods.insert(std::make_pair("webName", &phpCgiModule::webName));
     _methods.insert(std::make_pair("calendar", &phpCgiModule::calendar));
-
 }
 
 void phpCgiModule::helloWorld(HTTP::HTTPObject& req)

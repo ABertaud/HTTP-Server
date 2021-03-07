@@ -7,7 +7,7 @@
 
 #include "ASocketHandler.hpp"
 
-ASocketHandler::ASocketHandler() : _alive(true)
+ASocketHandler::ASocketHandler() : _reqManager(std::make_shared<requestManager>()), _alive(true)
 {
 }
 
@@ -18,5 +18,5 @@ void ASocketHandler::killSocket()
 
 void ASocketHandler::reload(std::unordered_map<moduleType, std::string>& modulePaths, const std::string& cgiPath, const processingList& processList)
 {
-    _reqManager.reload(modulePaths, processList, cgiPath);
+    _reqManager->reload(modulePaths, processList, cgiPath);
 }

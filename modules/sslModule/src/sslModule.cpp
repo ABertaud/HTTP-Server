@@ -9,7 +9,7 @@
 #include <memory>
 #include <cstring>
 
-sslModule::sslModule()
+sslModule::sslModule() : ASocketHandler()
 {
 }
 
@@ -29,7 +29,7 @@ moduleType sslModule::getModuleType() const
 void sslModule::prepareSocketHandler(boost::asio::io_context& ioContext, const moduleManager& modManager, boost::asio::ssl::context& ctx)
 {
     _socket = std::make_shared<sslSocket>(ioContext, ctx);
-    _reqManager.addModuleManager(modManager);
+    _reqManager->addModuleManager(modManager);
 }
 
 void sslModule::start()

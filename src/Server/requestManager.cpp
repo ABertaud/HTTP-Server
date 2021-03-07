@@ -19,7 +19,6 @@ void requestManager::addModuleManager(const moduleManager& modManager)
 
 void requestManager::launchRequest(const std::string& req, boost::asio::ip::tcp::socket& socket)
 {
-    _modManager.loadModules();
     try {
         HTTP::HTTPObject request(req);
         moduleType type = _processList.getCurrentType();
@@ -41,7 +40,6 @@ void requestManager::launchRequest(const std::string& req, boost::asio::ip::tcp:
 
 void requestManager::launchRequest(const std::string& req, boost::asio::ssl::stream<boost::asio::ip::tcp::socket>& socket)
 {
-    _modManager.loadModules();
     try {
         HTTP::HTTPObject request(req);
         moduleType type = _processList.getCurrentType();

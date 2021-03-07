@@ -21,7 +21,7 @@ boost::asio::basic_socket<boost::asio::ip::tcp>& tcpConnection::getSocket()
 void tcpConnection::prepareSocketHandler(boost::asio::io_context& ioContext, const moduleManager& modManager, [[maybe_unused]] boost::asio::ssl::context& ctx)
 {
     _socket = std::make_shared<boost::asio::ip::tcp::socket>(ioContext);
-    _reqManager.addModuleManager(modManager);
+    _reqManager->addModuleManager(modManager);
 }
 
 void tcpConnection::start()
