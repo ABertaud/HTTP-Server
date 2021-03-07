@@ -62,7 +62,7 @@ class sslModule : public IModule, public ASocketHandler {
         /** @brief Dtor of sslModule */
         ~sslModule() = default;
     private:
-         /** @brief Restart the async read */
+        /** @brief Restart the async read */
         void reset();
         /** @brief Shared pointer of a boost asio ssl tcp socket */
         std::shared_ptr<sslSocket> _socket;
