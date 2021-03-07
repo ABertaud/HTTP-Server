@@ -20,13 +20,14 @@ void requestManager::addModuleManager(const moduleManager& modManager)
 void requestManager::launchRequest(const std::string& req, boost::asio::ip::tcp::socket& socket)
 {
     try {
+        processingList cpyList = _processList;
         HTTP::HTTPObject request(req);
-        moduleType type = _processList.getCurrentType();
+        moduleType type = cpyList.getCurrentType();
 
         while (type != moduleType::NONE) {
             _modManager.getModule(type)->processRequest(request);
-            _processList.remove();
-            type = _processList.getCurrentType();
+            cpyList.remove();
+            type = cpyList.getCurrentType();
         }
         // request.setHTTPCode("200");
         auto answer = request.createResponse().toString();
@@ -41,14 +42,15 @@ void requestManager::launchRequest(const std::string& req, boost::asio::ip::tcp:
 void requestManager::launchRequest(const std::string& req, boost::asio::ssl::stream<boost::asio::ip::tcp::socket>& socket)
 {
     try {
+        processingList cpyList = _processList;
         HTTP::HTTPObject request(req);
-        moduleType type = _processList.getCurrentType();
+        moduleType type = cpyList.getCurrentType();
 
         while (type != moduleType::NONE) {
             std::cout << type << std::endl;
             _modManager.getModule(type)->processRequest(request);
-            _processList.remove();
-            type = _processList.getCurrentType();
+            cpyList.remove();
+            type = cpyList.getCurrentType();
         }
         // request.setHTTPCode("200");
         auto answer = request.createResponse().toString();
