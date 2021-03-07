@@ -75,7 +75,7 @@ class configHandler
         */
         int nthOccurrence(const std::string& str, const std::string& findMe, int nth);
         /** @brief This function will load the modules with a default path*/
-        void defaultfile();
+        void defaultFile();
         /** @brief This function will check if the file exist and will send false if he exist and true if not
         *   @param line one line of the configfile
         */

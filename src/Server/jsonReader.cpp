@@ -9,14 +9,8 @@
 #include "Error.hpp"
 #include <iostream>
 
-jsonReader::jsonReader(const std::string& configPath)
-try : _configPath(configPath)
+jsonReader::jsonReader(const std::string& configPath) : _configPath(configPath)
 {
-    loadConfigFile();
-}
-catch(const ErrorJsonReader& e)
-{
-    throw e;
 }
 
 nlohmann::json jsonReader::getJsonFile() const

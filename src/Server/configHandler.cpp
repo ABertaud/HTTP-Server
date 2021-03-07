@@ -14,7 +14,7 @@ _modulePaths(), _paths(), _certificatePath(), _CgiDir()
     std::string pathDirclean;
     _fileErr.open(paths.configPath);
     if (!_fileErr) {
-        defaultfile();
+        defaultFile();
     }
     if (paths.dirPath.back() != '/') {
         pathDirclean = paths.dirPath + "/";
@@ -76,7 +76,12 @@ bool configHandler::checkTag(std::string line)
 
 void configHandler::load()
 {
-    _json.loadConfigFile();
+    try {
+        _json.loadConfigFile();
+    } catch (nlohmann::json::exception const& jsonErr) {
+        defaultFile();
+        return;
+    }
     std::string line("");
     std::string name("");
     bool PosModule = false;
@@ -102,7 +107,7 @@ void configHandler::load()
                 break;
         }
         if (defaultCheck == true)
-            defaultfile();
+            defaultFile();
     } catch (Error const& err) {
         throw err;
     }
@@ -153,11 +158,11 @@ bool configHandler::checktagModule(std::string& line)
 
 bool configHandler::fexists(const std::string& filename)
 {
-  std::ifstream ifile(filename);
-  return ifile.good();
+    std::ifstream ifile(filename);
+    return ifile.good();
 }
 
-void configHandler::defaultfile()
+void configHandler::defaultFile()
 {
     std::vector <std::string> defaultPaths;
     std::string paths;

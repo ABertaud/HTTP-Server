@@ -49,23 +49,5 @@ int main(int ac, char **av)
         std::cout << e.what() << std::endl;
         return (84);
     }
-
-    // std::string filename = "../config/config.json";
-    // try {
-    //     jsonReader reader(filename);
-    //     std::cout << reader.getJsonFile();
-    // } catch (Error const& err) {
-    //     std::cout << err.what();
-    //     return (84);
-
-    // if (ac != 2)
-    //     return (-1);
-    // std::ifstream t(av[1]);
-    // std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
-    // HTTP::HTTPObject _obj();
-    // _obj.modifyElemContent(HTTP::HEADERS, "Host", "tg");
-    // std::cout << _obj.toString() << std::endl;
-    // auto res = _obj.createResponse("200", "<!DOCTYPE html><head><title>Zia </title></head><body><center><h1>HTTP 2OO OK</h1></center></body>").toString();
-    // std::cout << res << std::endl;
     return (0);
 }
